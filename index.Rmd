@@ -15,7 +15,7 @@ github-repo: enixam/data-manipulation-sql
 # Preface {-}
 
 
-This document covers essential SQL skills for data manipulation, with a focus on DQL (Data Query Language, always starts with `SELECT`). Quries will typically be interpreted with the `PostgreSQL` dialect in `knitr`'s `sql` engine.  
+This document covers essential SQL skills for data manipulation, with a focus on DQL (Data Query Language, always starts with `SELECT`). Quries will typically be interpreted with the `PostgreSQL` dialect in `knitr`'s `sql` engine. I include `dplyr` code when there could be some interesting comparison between these two tools. 
 
 
 Before each chapter, the following command is automatically evaluated:  

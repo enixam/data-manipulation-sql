@@ -10,9 +10,12 @@ knitr::opts_chunk$set(
   fig.asp = 0.618,  # 1 / phi
   fig.align = "center",
   message = F,
-  warning = F
+  warning = F,
+  tab.cap = NA,
+  connection = "con"
 )
 
+knitr::opts_knit$set(sql.max.print = 10)
 
 
 library(RPostgreSQL)
