@@ -1,7 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-*.js linguist-language=sql
-*.css linguist-language=sql
-*.html linguist-language=sql
-*.Rmd linguist-language=sql
-*.R linguist-language=sql
+*.js linguist-language=SQL
+*.css linguist-language=SQL
+*.html linguist-language=SQL
+*.Rmd linguist-language=SQL
+*.R linguist-language=SQL
