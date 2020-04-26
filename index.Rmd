@@ -1,0 +1,34 @@
+--- 
+title: "Data Manipulation with SQL"
+author: "Qiushi Yan"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [references.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: enixam/data-manipulation-sql
+#nocite: '@*'
+#description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+---
+
+# Preface {-}
+
+
+This document covers essential SQL skills for data manipulation, with a focus on DQL (Data Query Language, always starts with `SELECT`). Quries will typically be interpreted with the `PostgreSQL` dialect in `knitr`'s `sql` engine.  
+
+
+Before each chapter, the following command is automatically evaluated:  
+
+
+```{r, eval = FALSE}
+library(RPostgreSQL)
+library(DBI)
+
+con <- dbConnect(dbDriver('PostgreSQL'), # SQL engine
+                 dbname = dbname, # database name
+                 host = "localhost", # either localhost or a database url
+                 port = 5432, # the defualt
+                 user = user, # username
+                 password = password) # password
+```

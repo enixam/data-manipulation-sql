@@ -1,0 +1,16 @@
+new_session: yes
+book_filename: "bookdown-English"
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Chapter "
+
+
+before_chapter_script: "_common.R"
+
+rmd_files: [
+  "index.Rmd",
+  "basic-query.Rmd",
+  
+  "references.Rmd"
+]
