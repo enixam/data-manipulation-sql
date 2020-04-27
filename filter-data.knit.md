@@ -19,14 +19,5 @@ Unary operator `NOT`
 
 Be mindful of order of operators: `NOT` (first), `AND` (second), `OR` (third). One workaround is to use parenthesis `()` to indicate order. 
 
-```{sql connection=con}
-SELECT region, avg(p0010001) AS avg_p0010001
-FROM us_counties_2010 
-GROUP BY cube(region)
-```
 
 
-## Other relational operators  
-
-
-## Missing values

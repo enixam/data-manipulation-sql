@@ -1,7 +1,7 @@
 --- 
 title: "Data Manipulation with SQL"
 author: "Qiushi Yan"
-date: "`r Sys.Date()`"
+date: "2020-04-27"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [references.bib, packages.bib]
@@ -21,7 +21,8 @@ This document covers essential SQL skills for data manipulation, with a focus on
 Before each chapter, the following command is automatically evaluated:  
 
 
-```{r, eval = FALSE}
+
+```r
 library(RPostgreSQL)
 library(DBI)
 
