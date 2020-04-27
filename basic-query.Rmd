@@ -3,5 +3,8 @@
 # Basic query
 
 
-
-
+<div style="overflow-x:auto;">
+```{sql connection=con}
+SELECT * FROM us_counties_2010
+```
+<div>

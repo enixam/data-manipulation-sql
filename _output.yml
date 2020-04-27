@@ -2,10 +2,6 @@ bookdown::gitbook:
   split_by: section
   css: css/style.css
   config:
-    fontsettings:
-      theme: white
-      family: serif
-      size: 2
     toc:
       collapse: section
       before: |
@@ -15,6 +11,6 @@ bookdown::gitbook:
           <a href="https://github.com/rstudio/bookdown" target="blank">Written with bookdown</a>
         </li>
     edit:
-      link: https://github.com/user/enixam/data-manipulation-sql/master/%s
+      link: https://github.com/enixam/data-manipulation-sql/edit/master/%s
       text: "Edit"
 

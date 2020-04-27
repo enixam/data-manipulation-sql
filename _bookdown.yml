@@ -1,5 +1,5 @@
 new_session: yes
-book_filename: "bookdown-English"
+book_filename: "data-manipulation-sql"
 delete_merged_file: true
 language:
   ui:
@@ -11,6 +11,7 @@ before_chapter_script: "_common.R"
 rmd_files: [
   "index.Rmd",
   "basic-query.Rmd",
+  "filter-data.Rmd",
   
   "references.Rmd"
 ]
