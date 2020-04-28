@@ -11,7 +11,9 @@ before_chapter_script: "_common.R"
 rmd_files: [
   "index.Rmd",
   "basic-query.Rmd",
-  "filter-data.Rmd",
+  "filtering.Rmd",
+  "aggregating.Rmd",
+  "window-functions.Rmd",
   
   "references.Rmd"
 ]

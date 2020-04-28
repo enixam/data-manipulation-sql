@@ -3,7 +3,7 @@
   font-size: 12px;
 }
 
-th, td {
+.knitsql-table th, .knitsql-table td {
   padding: 8px;
   text-align: center;
 }
