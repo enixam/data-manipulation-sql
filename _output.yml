@@ -1,9 +1,8 @@
 bookdown::gitbook:
-  split_by: section
   css: css/style.css
   config:
     toc:
-      collapse: section
+      collapse: subsection
       before: |
         <li><a href="./">Data Manipulationn with SQL</a></li>
       after: |

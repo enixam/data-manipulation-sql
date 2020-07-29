@@ -11,10 +11,13 @@ before_chapter_script: "_common.R"
 
 rmd_files: [
   "index.Rmd",
-  "basic-query.Rmd",
+  "sql-basics.Rmd",
+  "intro-query.Rmd",
   "filtering.Rmd",
   "aggregating.Rmd",
   "window-functions.Rmd",
-  
+  "joining-tables.Rmd",
+  "data-types.Rmd",  
+  "solutions.Rmd",
   "references.Rmd"
 ]

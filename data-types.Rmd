@@ -1,0 +1,44 @@
+
+# Data types 
+
+## Converting data types 
+
+To change the data type of a column, we simply need to use the `column::datatype` format,
+where column is the column name, and data type is the data type you want to change the
+column to.
+
+`::`
+
+`CAST`
+
+## Type-specific operations
+
+### Date and time 
+
+ To see your current settings, you can use the following command:
+
+```{sql connection=con}
+SHOW DateStyle
+```
+
+
+
+```{sql connection=con}
+SET DateStyle='ISO, MDY';
+```
+
+
+```{sql connection=con}
+SELECT current_date, current_timestamp, NOW()
+```
+
+
+```{sql connection=con}
+SELECT current_date,
+  EXTRACT(year FROM current_date) AS year,
+  EXTRACT(month FROM current_date) AS month,
+  EXTRACT(day FROM current_date) AS day
+```
+
+
+

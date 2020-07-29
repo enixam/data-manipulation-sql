@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 knitr::opts_knit$set(sql.max.print = 10)
 
-
+library(dplyr)
 library(RPostgreSQL)
 library(DBI)
 
