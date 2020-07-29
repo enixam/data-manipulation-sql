@@ -17,28 +17,68 @@ column to.
 
  To see your current settings, you can use the following command:
 
-```{sql connection=con}
+
+```sql
 SHOW DateStyle
 ```
 
 
+<div class="knitsql-table">
 
-```{sql connection=con, eval = FALSE}
+
+Table: (\#tab:unnamed-chunk-1)1 records
+
+|DateStyle |
+|:---------|
+|ISO, MDY  |
+
+</div>
+
+
+
+
+```sql
 SET DateStyle='ISO, MDY';
 ```
 
 
-```{sql connection=con}
+
+```sql
 SELECT current_date, current_timestamp, NOW()
 ```
 
 
-```{sql connection=con}
+<div class="knitsql-table">
+
+
+Table: (\#tab:unnamed-chunk-3)1 records
+
+|date       |now                 |now                 |
+|:----------|:-------------------|:-------------------|
+|2020-07-29 |2020-07-30 00:46:45 |2020-07-30 00:46:45 |
+
+</div>
+
+
+
+```sql
 SELECT current_date,
   EXTRACT(year FROM current_date) AS year,
   EXTRACT(month FROM current_date) AS month,
   EXTRACT(day FROM current_date) AS day
 ```
+
+
+<div class="knitsql-table">
+
+
+Table: (\#tab:unnamed-chunk-4)1 records
+
+|date       | year| month| day|
+|:----------|----:|-----:|---:|
+|2020-07-29 | 2020|     7|  29|
+
+</div>
 
 
 
