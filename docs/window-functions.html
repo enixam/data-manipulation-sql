@@ -164,9 +164,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.4" data-path="filtering.html"><a href="filtering.html#the-having-clause"><i class="fa fa-check"></i><b>3.4</b> The <code>HAVING</code> clause</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="aggregating.html"><a href="aggregating.html"><i class="fa fa-check"></i><b>4</b> Aggregating</a><ul>
+<li class="chapter" data-level="4.0.1" data-path="aggregating.html"><a href="aggregating.html#rowwise-aggregating"><i class="fa fa-check"></i><b>4.0.1</b> rowwise aggregating</a></li>
 <li class="chapter" data-level="4.1" data-path="aggregating.html"><a href="aggregating.html#the-group-by-clause."><i class="fa fa-check"></i><b>4.1</b> The <code>GROUP BY</code> clause.</a></li>
-<li class="chapter" data-level="4.2" data-path="aggregating.html"><a href="aggregating.html#null-values-in-aggregation"><i class="fa fa-check"></i><b>4.2</b> NULL values in aggregation</a></li>
-<li class="chapter" data-level="4.3" data-path="aggregating.html"><a href="aggregating.html#using-group-by-in-non-aggregating-scenarios"><i class="fa fa-check"></i><b>4.3</b> Using <code>GROUP BY</code> in non-aggregating scenarios</a></li>
+<li class="chapter" data-level="4.2" data-path="aggregating.html"><a href="aggregating.html#common-aggregating-functions"><i class="fa fa-check"></i><b>4.2</b> Common aggregating functions</a></li>
+<li class="chapter" data-level="4.3" data-path="aggregating.html"><a href="aggregating.html#null-values-in-aggregation"><i class="fa fa-check"></i><b>4.3</b> NULL values in aggregation</a></li>
+<li class="chapter" data-level="4.4" data-path="aggregating.html"><a href="aggregating.html#using-group-by-in-non-aggregating-scenarios"><i class="fa fa-check"></i><b>4.4</b> Using <code>GROUP BY</code> in non-aggregating scenarios</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="window-functions.html"><a href="window-functions.html"><i class="fa fa-check"></i><b>5</b> Window functions</a><ul>
 <li class="chapter" data-level="5.1" data-path="window-functions.html"><a href="window-functions.html#statisticcs-with-window-functions"><i class="fa fa-check"></i><b>5.1</b> Statisticcs with window functions</a></li>
@@ -174,11 +176,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6" data-path="joining.html"><a href="joining.html"><i class="fa fa-check"></i><b>6</b> Joining</a></li>
 <li class="chapter" data-level="7" data-path="data-types.html"><a href="data-types.html"><i class="fa fa-check"></i><b>7</b> Data types</a><ul>
 <li class="chapter" data-level="7.1" data-path="data-types.html"><a href="data-types.html#converting-data-types"><i class="fa fa-check"></i><b>7.1</b> Converting data types</a></li>
-<li class="chapter" data-level="7.2" data-path="data-types.html"><a href="data-types.html#type-specific-operations"><i class="fa fa-check"></i><b>7.2</b> Type-specific operations</a><ul>
-<li class="chapter" data-level="7.2.1" data-path="data-types.html"><a href="data-types.html#date-and-time"><i class="fa fa-check"></i><b>7.2.1</b> Date and time</a></li>
+<li class="chapter" data-level="7.2" data-path="data-types.html"><a href="data-types.html#date-and-time"><i class="fa fa-check"></i><b>7.2</b> Date and time</a></li>
 </ul></li>
-</ul></li>
-<li class="chapter" data-level="8" data-path="solutions-to-interview-questions.html"><a href="solutions-to-interview-questions.html"><i class="fa fa-check"></i><b>8</b> Solutions to interview questions</a></li>
+<li class="chapter" data-level="8" data-path="solutions-to-sql-puzzles.html"><a href="solutions-to-sql-puzzles.html"><i class="fa fa-check"></i><b>8</b> Solutions to SQL puzzles</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li>
@@ -204,10 +204,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="window-functions" class="section level1">
 <h1><span class="header-section-number">Chapter 5</span> Window functions</h1>
-<div class="sourceCode" id="cb31"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb31-1"><a href="window-functions.html#cb31-1"></a><span class="kw">SELECT</span> office_id, first_name, salary, <span class="fu">sum</span>(salary) <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> office_id <span class="kw">ORDER</span> <span class="kw">BY</span> salary)</span>
-<span id="cb31-2"><a href="window-functions.html#cb31-2"></a><span class="kw">AS</span> avg_salary</span>
-<span id="cb31-3"><a href="window-functions.html#cb31-3"></a><span class="kw">FROM</span> employees</span>
-<span id="cb31-4"><a href="window-functions.html#cb31-4"></a><span class="kw">ORDER</span> <span class="kw">BY</span> office_id</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb32-1"><a href="window-functions.html#cb32-1"></a><span class="kw">SELECT</span> office_id, first_name, salary, <span class="fu">sum</span>(salary) <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> office_id <span class="kw">ORDER</span> <span class="kw">BY</span> salary)</span>
+<span id="cb32-2"><a href="window-functions.html#cb32-2"></a><span class="kw">AS</span> avg_salary</span>
+<span id="cb32-3"><a href="window-functions.html#cb32-3"></a><span class="kw">FROM</span> employees</span>
+<span id="cb32-4"><a href="window-functions.html#cb32-4"></a><span class="kw">ORDER</span> <span class="kw">BY</span> office_id</span></code></pre></div>
 <div class="knitsql-table">
 <table>
 <caption><span id="tab:unnamed-chunk-1">Table 3.1: </span>5 records</caption>
@@ -253,7 +253,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb32"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb32-1"><a href="window-functions.html#cb32-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customers</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb33-1"><a href="window-functions.html#cb33-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> customers</span></code></pre></div>
 <div class="knitsql-table">
 <table>
 <caption><span id="tab:unnamed-chunk-2">Table 3.2: </span>4 records</caption>

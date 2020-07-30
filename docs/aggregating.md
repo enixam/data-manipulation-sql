@@ -3,9 +3,9 @@
 
 In each of the examples, the expression aggregates over all the rows, and returns a single row.  
 
-That's what makes these expressions **aggregate expressions**. They can combine values from multiple rows, aggregating them together. These are different from the expressions earlier like `round`, `strsub` , which operate independently on the values in each row. Those are called non-aggregate
-expressions or **scalar expressions**. They return one value per row. One need to be careful about mixing aggregate and scalar operations. You can use aggregate and scalar operations together in
-an expression as in the following examples.    
+That's what makes these expressions **aggregate expressions**. They can combine values from multiple rows, aggregating them together. These are different from the arithmetic operations like `+`, `-`, `*` and `/`, or functions like `ROUND`, `STRSUB` , which operate independently on the values in each row, and return a column whose length equals that of the whole table. Those are called **non-aggregate** expressions. 
+
+One need to be careful about mixing aggregate and non-aggregate operations. You can use aggregate and non-aggregate operations together in an expression as in the following examples.    
 
 
 ```sql
@@ -43,16 +43,16 @@ Table: (\#tab:unnamed-chunk-2)1 records
 
 </div>
 
-Unfortunately, there are also invalid mix of aggregation expression and scalar expressions.
+Unfortunately, there are also invalid mix of aggregation expression and non-aggreagate expressions. Suppose we want to know the difference between one's salary and the highest salary in the table
 
 
 ```sql
 -- not run
-SELECT salary - AVG(salary) 
+SELECT salary - max(salary) 
 FROM employees
 ```
 
-This query will throw an error message like **"employees.salary must appear in the GROUP BY clause or be used in an aggregate function"**. For R users, this may be a bit confusing, since similar dplyr expresisons work just fine:  
+This query will throw an error message like **"employees.salary must appear in the GROUP BY clause or be used in an aggregate function"**. For R users, this may be a bit confusing, since similar dplyr expressions work just fine:  
 
 
 ```r
@@ -60,16 +60,18 @@ library(dplyr)
 employees <- readr::read_csv("data/employees.csv")
 
 employees %>%
-  mutate(difference = salary - mean(salary))
+  mutate(difference = salary - max(salary))
 #> # A tibble: 5 x 6
 #>   empl_id first_name last_name salary office_id difference
 #>     <dbl> <chr>      <chr>      <dbl> <chr>          <dbl>
-#> 1       1 Ambrosio   Rojas      25784 c            -11297.
-#> 2       2 Val        Snyder     37506 e               425.
-#> 3       3 Virginia   Levitt     54523 b             17442.
-#> 4       4 Sabahattin Tilki      28060 a             -9021.
-#> 5       5 Lujza      Csizmadia  39530 b              2449.
+#> 1       1 Ambrosio   Rojas      25784 c             -28739
+#> 2       2 Val        Snyder     37506 e             -17017
+#> 3       3 Virginia   Levitt     54523 b                  0
+#> 4       4 Sabahattin Tilki      28060 a             -26463
+#> 5       5 Lujza      Csizmadia  39530 b             -14993
 ```
+
+This is because the R language recycles the one element scalar `mean(salary)` to match its length to `salary`. SQL, on the other hand, does not know how to subtract one row from multiple rows. 
 
 For now, the workaround is to use **subqueries**. Later we will see another solution using window functions in Chapter \@ref(window-functions).
 
@@ -77,7 +79,7 @@ For now, the workaround is to use **subqueries**. Later we will see another solu
 
 ```sql
 SELECT salary - 
-  (SELECT AVG(salary) FROM employees)
+  (SELECT MAX(salary) FROM employees)
   AS difference
 FROM employees
 ```
@@ -90,34 +92,40 @@ Table: (\#tab:unnamed-chunk-5)5 records
 
 | difference|
 |----------:|
-|     -11297|
-|        425|
-|      17442|
-|      -9021|
-|       2449|
+|     -28739|
+|     -17017|
+|          0|
+|     -26463|
+|     -14993|
 
 </div>
 
 
-
-
-
-Also, you cannot use both scalar and aggregate expressions in `SELECT`. For example, the following query has two items in the `SELECT` list. 
+Also, you cannot select aggregating expressions and regular columns in parallel. For example, the following query has two items in the `SELECT` list. 
 
 
 ```sql
 -- not run
-SELECT first_name, sum(salary) FROM employees
+SELECT first_name, max(salary) FROM employees
 ```
 
-The first is just the column reference first name, that evaluates as a scalar expression. It returns a value for each row in the `employees` table. The second is the aggregate expression, sum salary. That returns just one row that aggregates all the salary values in the `employees` table.
+The first is just the column reference first name, that evaluates as a scalar expression. It returns a value for each row in the `employees` table. The second is the aggregate expression, max salary. That returns one row that aggregates all the salary values in the `employees` table.
 
 
-  
+
+
+### rowwise aggregating
+
+There are functions in SQL that are designed to perform computations per row, instead of across rows. For them, we need not to worry about the unmatched length problem. 
+
+For example, there are non-aggregate `GREATEST()` for `MAX()`, and `LEAST` for `MIN()`
 
 
 ```sql
-SELECT red, green, blue, GREATEST(red, green, blue) FROM crayons
+-- what is the dominant and least-used color for each crayon? 
+SELECT 
+  red, green, blue, GREATEST(red, green, blue), LEAST(red, green, blue)
+FROM crayons
 ```
 
 
@@ -126,22 +134,47 @@ SELECT red, green, blue, GREATEST(red, green, blue) FROM crayons
 
 Table: (\#tab:unnamed-chunk-7)Displaying records 1 - 10
 
-| red| green| blue| greatest|
-|---:|-----:|----:|--------:|
-| 239|   219|  197|      239|
-| 205|   149|  117|      205|
-| 253|   217|  181|      253|
-| 120|   219|  226|      226|
-| 135|   169|  107|      169|
-| 255|   164|  116|      255|
-| 250|   231|  181|      250|
-| 159|   129|  112|      159|
-| 253|   124|  110|      253|
-|  35|    35|   35|       35|
+| red| green| blue| greatest| least|
+|---:|-----:|----:|--------:|-----:|
+| 239|   219|  197|      239|   197|
+| 205|   149|  117|      205|   117|
+| 253|   217|  181|      253|   181|
+| 120|   219|  226|      226|   120|
+| 135|   169|  107|      169|   107|
+| 255|   164|  116|      255|   116|
+| 250|   231|  181|      250|   181|
+| 159|   129|  112|      159|   112|
+| 253|   124|  110|      253|   110|
+|  35|    35|   35|       35|    35|
 
 </div>
 
 
+This is much like the rowwise mechanism introduced since dplyr 1.0 
+
+
+```r
+crayon <- readr::read_csv("data/crayons.csv")
+crayon %>%
+  rowwise() %>% 
+  mutate(dominant = max(c(red, green, blue)),
+         `least used` = min(c(red, green, blue)))
+#> # A tibble: 120 x 8
+#> # Rowwise: 
+#>    color            hex      red green  blue  pack dominant `least used`
+#>    <chr>            <chr>  <dbl> <dbl> <dbl> <dbl>    <dbl>        <dbl>
+#>  1 Almond           EFDBC5   239   219   197   120      239          197
+#>  2 Antique Brass    CD9575   205   149   117   120      205          117
+#>  3 Apricot          FDD9B5   253   217   181    24      253          181
+#>  4 Aquamarine       78DBE2   120   219   226   120      226          120
+#>  5 Asparagus        87A96B   135   169   107    64      169          107
+#>  6 Atomic Tangerine FFA474   255   164   116    96      255          116
+#>  7 Banana Mania     FAE7B5   250   231   181   120      250          181
+#>  8 Beaver           9F8170   159   129   112   120      159          112
+#>  9 Bittersweet      FD7C6E   253   124   110    64      253          110
+#> 10 Black            232323    35    35    35     8       35           35
+#> # ... with 110 more rows
+```
 
 
 
@@ -161,7 +194,7 @@ GROUP BY min_age;
 <div class="knitsql-table">
 
 
-Table: (\#tab:unnamed-chunk-8)2 records
+Table: (\#tab:unnamed-chunk-9)2 records
 
 | min_age| count|
 |-------:|-----:|
@@ -183,7 +216,7 @@ GROUP BY low_price
 <div class="knitsql-table">
 
 
-Table: (\#tab:unnamed-chunk-9)2 records
+Table: (\#tab:unnamed-chunk-10)2 records
 
 |low_price | count|
 |:---------|-----:|
@@ -201,7 +234,7 @@ SELECT list_price < 10, COUNT(*) FROM games GROUP BY list_price < 10;
 <div class="knitsql-table">
 
 
-Table: (\#tab:unnamed-chunk-10)2 records
+Table: (\#tab:unnamed-chunk-11)2 records
 
 |?column? | count|
 |:--------|-----:|
@@ -212,7 +245,7 @@ Table: (\#tab:unnamed-chunk-10)2 records
 
 
 ```sql
-SELECT list_price > 20 AS over_20, max_players, COUNT(*)
+SELECT (list_price) > 20 AS over_20, max_players, COUNT(*)
 FROM games
 GROUP BY over_20, max_players;
 ```
@@ -221,7 +254,7 @@ GROUP BY over_20, max_players;
 <div class="knitsql-table">
 
 
-Table: (\#tab:unnamed-chunk-11)3 records
+Table: (\#tab:unnamed-chunk-12)3 records
 
 |over_20 | max_players| count|
 |:-------|-----------:|-----:|
@@ -231,31 +264,33 @@ Table: (\#tab:unnamed-chunk-11)3 records
 
 </div>
 
-
-
-
-
- 
-
-
 ```sql
-SELECT shop, SUM((price IS  NULL)::int), COUNT(*) 
-FROM inventory
-GROUP BY shop
+SELECT * FROM games
 ```
 
 
 <div class="knitsql-table">
 
 
-Table: (\#tab:unnamed-chunk-12)2 records
+Table: (\#tab:unnamed-chunk-13)5 records
 
-|shop      | sum| count|
-|:---------|---:|-----:|
-|Board 'Em |   1|     3|
-|Dicey     |   0|     2|
+|id |name       |inventor            | year| min_age| min_players| max_players| list_price|
+|:--|:----------|:-------------------|----:|-------:|-----------:|-----------:|----------:|
+|1  |Monopoly   |Elizabeth Magie     | 1903|       8|           2|           6|      19.99|
+|2  |Scrabble   |Alfred Mosher Butts | 1938|       8|           2|           4|      17.99|
+|3  |Clue       |Anthony E. Pratt    | 1944|       8|           2|           6|       9.99|
+|4  |Candy Land |Eleanor Abbott      | 1948|       3|           2|           4|       7.99|
+|5  |Risk       |Albert Lamorisse    | 1957|      10|           2|           5|      29.99|
 
 </div>
+
+
+
+One of the major limitations of the `GROUP BY` clause is that it left you few choices in the `SELECT` list: **either an aggregate expression or columns that appear in `GROUP BY`**  
+
+
+## Common aggregating functions
+
 
 
 ## NULL values in aggregation  
@@ -292,7 +327,7 @@ GROUP BY pack
 <div class="knitsql-table">
 
 
-Table: (\#tab:unnamed-chunk-14)9 records
+Table: (\#tab:unnamed-chunk-15)9 records
 
 | pack| red_count| green_count| blue_count|
 |----:|---------:|-----------:|----------:|

@@ -13,3 +13,8 @@ WITH inventory_subset AS (
 SELECT * FROM inventory_subset
 ```
 
+
+
+
+
+

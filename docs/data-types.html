@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="joining.html"/>
-<link rel="next" href="solutions-to-interview-questions.html"/>
+<link rel="next" href="solutions-to-sql-puzzles.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -164,9 +164,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.4" data-path="filtering.html"><a href="filtering.html#the-having-clause"><i class="fa fa-check"></i><b>3.4</b> The <code>HAVING</code> clause</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="aggregating.html"><a href="aggregating.html"><i class="fa fa-check"></i><b>4</b> Aggregating</a><ul>
+<li class="chapter" data-level="4.0.1" data-path="aggregating.html"><a href="aggregating.html#rowwise-aggregating"><i class="fa fa-check"></i><b>4.0.1</b> rowwise aggregating</a></li>
 <li class="chapter" data-level="4.1" data-path="aggregating.html"><a href="aggregating.html#the-group-by-clause."><i class="fa fa-check"></i><b>4.1</b> The <code>GROUP BY</code> clause.</a></li>
-<li class="chapter" data-level="4.2" data-path="aggregating.html"><a href="aggregating.html#null-values-in-aggregation"><i class="fa fa-check"></i><b>4.2</b> NULL values in aggregation</a></li>
-<li class="chapter" data-level="4.3" data-path="aggregating.html"><a href="aggregating.html#using-group-by-in-non-aggregating-scenarios"><i class="fa fa-check"></i><b>4.3</b> Using <code>GROUP BY</code> in non-aggregating scenarios</a></li>
+<li class="chapter" data-level="4.2" data-path="aggregating.html"><a href="aggregating.html#common-aggregating-functions"><i class="fa fa-check"></i><b>4.2</b> Common aggregating functions</a></li>
+<li class="chapter" data-level="4.3" data-path="aggregating.html"><a href="aggregating.html#null-values-in-aggregation"><i class="fa fa-check"></i><b>4.3</b> NULL values in aggregation</a></li>
+<li class="chapter" data-level="4.4" data-path="aggregating.html"><a href="aggregating.html#using-group-by-in-non-aggregating-scenarios"><i class="fa fa-check"></i><b>4.4</b> Using <code>GROUP BY</code> in non-aggregating scenarios</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="window-functions.html"><a href="window-functions.html"><i class="fa fa-check"></i><b>5</b> Window functions</a><ul>
 <li class="chapter" data-level="5.1" data-path="window-functions.html"><a href="window-functions.html#statisticcs-with-window-functions"><i class="fa fa-check"></i><b>5.1</b> Statisticcs with window functions</a></li>
@@ -174,11 +176,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6" data-path="joining.html"><a href="joining.html"><i class="fa fa-check"></i><b>6</b> Joining</a></li>
 <li class="chapter" data-level="7" data-path="data-types.html"><a href="data-types.html"><i class="fa fa-check"></i><b>7</b> Data types</a><ul>
 <li class="chapter" data-level="7.1" data-path="data-types.html"><a href="data-types.html#converting-data-types"><i class="fa fa-check"></i><b>7.1</b> Converting data types</a></li>
-<li class="chapter" data-level="7.2" data-path="data-types.html"><a href="data-types.html#type-specific-operations"><i class="fa fa-check"></i><b>7.2</b> Type-specific operations</a><ul>
-<li class="chapter" data-level="7.2.1" data-path="data-types.html"><a href="data-types.html#date-and-time"><i class="fa fa-check"></i><b>7.2.1</b> Date and time</a></li>
+<li class="chapter" data-level="7.2" data-path="data-types.html"><a href="data-types.html#date-and-time"><i class="fa fa-check"></i><b>7.2</b> Date and time</a></li>
 </ul></li>
-</ul></li>
-<li class="chapter" data-level="8" data-path="solutions-to-interview-questions.html"><a href="solutions-to-interview-questions.html"><i class="fa fa-check"></i><b>8</b> Solutions to interview questions</a></li>
+<li class="chapter" data-level="8" data-path="solutions-to-sql-puzzles.html"><a href="solutions-to-sql-puzzles.html"><i class="fa fa-check"></i><b>8</b> Solutions to SQL puzzles</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li>
@@ -204,23 +204,48 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="data-types" class="section level1">
 <h1><span class="header-section-number">Chapter 7</span> Data types</h1>
+<p>The notion of data types underpin endless possibilities for type-specific operations. For example, we could extract the year component from a date, yet the same operation does not make any sense when applied to a string. On the other hand, regular expressions are designed for string matching problems and cannot be adapted to date.</p>
 <div id="converting-data-types" class="section level2">
 <h2><span class="header-section-number">7.1</span> Converting data types</h2>
-<p>To change the data type of a column, we simply need to use the <code>column::datatype</code> format,
-where column is the column name, and data type is the data type you want to change the
-column to.</p>
+<p>There is no guarantee that SQL will always correctly recognize the right data type for columns. 2020-07-30 means a date, but can be imported as a string. Since type-specific operations are only defined for certain data types. It’s natural to think about converting some columnsn to the “right” data type. To change the data type of a column, we simply need to use the <code>column::datatype</code> format,
+where column is the column name, and data type is the data type you want to change the column into.</p>
 <p><code>::</code></p>
 <p><code>CAST</code></p>
-</div>
-<div id="type-specific-operations" class="section level2">
-<h2><span class="header-section-number">7.2</span> Type-specific operations</h2>
-<div id="date-and-time" class="section level3">
-<h3><span class="header-section-number">7.2.1</span> Date and time</h3>
-<p>To see your current settings, you can use the following command:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb33-1"><a href="data-types.html#cb33-1"></a>SHOW DateStyle</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb34-1"><a href="data-types.html#cb34-1"></a><span class="kw">SELECT</span> shop, <span class="fu">SUM</span>((price <span class="kw">IS</span>  <span class="kw">NULL</span>):<span class="ch">:int</span>), <span class="fu">COUNT</span>(<span class="op">*</span>) </span>
+<span id="cb34-2"><a href="data-types.html#cb34-2"></a><span class="kw">FROM</span> inventory</span>
+<span id="cb34-3"><a href="data-types.html#cb34-3"></a><span class="kw">GROUP</span> <span class="kw">BY</span> shop</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-1">Table 3.1: </span>1 records</caption>
+<caption><span id="tab:unnamed-chunk-1">Table 3.1: </span>2 records</caption>
+<thead>
+<tr class="header">
+<th align="left">shop</th>
+<th align="right">sum</th>
+<th align="right">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Board ’Em</td>
+<td align="right">1</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">Dicey</td>
+<td align="right">0</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="date-and-time" class="section level2">
+<h2><span class="header-section-number">7.2</span> Date and time</h2>
+<p>To see your current date settings, you can use the following command:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb35-1"><a href="data-types.html#cb35-1"></a>SHOW DateStyle</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 3.2: </span>1 records</caption>
 <thead>
 <tr class="header">
 <th align="left">DateStyle</th>
@@ -233,11 +258,15 @@ column to.</p>
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb34"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb34-1"><a href="data-types.html#cb34-1"></a><span class="kw">SET</span> DateStyle<span class="op">=</span><span class="st">&#39;ISO, MDY&#39;</span>;</span></code></pre></div>
-<div class="sourceCode" id="cb35"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb35-1"><a href="data-types.html#cb35-1"></a><span class="kw">SELECT</span> <span class="fu">current_date</span>, <span class="fu">current_timestamp</span>, NOW()</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb36-1"><a href="data-types.html#cb36-1"></a><span class="kw">SET</span> DateStyle<span class="op">=</span><span class="st">&#39;ISO, MDY&#39;</span>;</span></code></pre></div>
+<p>In addition to displaying dates that are input as strings, we can display the current date
+very simply using the <code>current_date</code> keywords in Postgres.</p>
+<p>Additionally, the SQL standard offers a TIMESTAMP data type. A
+timestamp represents a date and a time, down to a microsecond. This can be displayed via the <code>current_timestamp</code> keyword or the <code>NOW()</code> function.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb37-1"><a href="data-types.html#cb37-1"></a><span class="kw">SELECT</span> <span class="fu">current_date</span>, <span class="fu">current_timestamp</span>, NOW()</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-3">Table 3.3: </span>1 records</caption>
+<caption><span id="tab:unnamed-chunk-4">Table 3.4: </span>1 records</caption>
 <thead>
 <tr class="header">
 <th align="left">date</th>
@@ -247,20 +276,23 @@ column to.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">2020-07-29</td>
-<td align="left">2020-07-30 00:46:45</td>
-<td align="left">2020-07-30 00:46:45</td>
+<td align="left">2020-07-30</td>
+<td align="left">2020-07-30 11:39:36</td>
+<td align="left">2020-07-30 11:39:36</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb36"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb36-1"><a href="data-types.html#cb36-1"></a><span class="kw">SELECT</span> <span class="fu">current_date</span>,</span>
-<span id="cb36-2"><a href="data-types.html#cb36-2"></a>  <span class="fu">EXTRACT</span>(<span class="dt">year</span> <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">year</span>,</span>
-<span id="cb36-3"><a href="data-types.html#cb36-3"></a>  <span class="fu">EXTRACT</span>(<span class="dt">month</span> <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">month</span>,</span>
-<span id="cb36-4"><a href="data-types.html#cb36-4"></a>  <span class="fu">EXTRACT</span>(<span class="dt">day</span> <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">day</span></span></code></pre></div>
+<p>Often, we will want to decompose our dates into their component parts. For example,
+we may be interested in only the year and month, but not the day, for the monthly
+analysis of our data. To do this, we can use the syntax <code>EXTRACT(component FROM date)</code>.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb38-1"><a href="data-types.html#cb38-1"></a><span class="kw">SELECT</span> <span class="fu">current_date</span>,</span>
+<span id="cb38-2"><a href="data-types.html#cb38-2"></a>  <span class="fu">EXTRACT</span>(<span class="dt">year</span> <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">year</span>,</span>
+<span id="cb38-3"><a href="data-types.html#cb38-3"></a>  <span class="fu">EXTRACT</span>(<span class="dt">month</span> <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">month</span>,</span>
+<span id="cb38-4"><a href="data-types.html#cb38-4"></a>  <span class="fu">EXTRACT</span>(<span class="dt">day</span> <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">day</span></span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-4">Table 3.4: </span>1 records</caption>
+<caption><span id="tab:unnamed-chunk-5">Table 3.5: </span>1 records</caption>
 <thead>
 <tr class="header">
 <th align="left">date</th>
@@ -271,16 +303,68 @@ column to.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">2020-07-29</td>
+<td align="left">2020-07-30</td>
 <td align="right">2020</td>
 <td align="right">7</td>
-<td align="right">29</td>
+<td align="right">30</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Similarly, we can abbreviate these components as <code>y,</code>mon<code>, and</code>d`,</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb39-1"><a href="data-types.html#cb39-1"></a><span class="kw">SELECT</span> <span class="fu">current_date</span>,</span>
+<span id="cb39-2"><a href="data-types.html#cb39-2"></a>  <span class="fu">EXTRACT</span>(y <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">year</span>,</span>
+<span id="cb39-3"><a href="data-types.html#cb39-3"></a>  <span class="fu">EXTRACT</span>(mon <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">month</span>,</span>
+<span id="cb39-4"><a href="data-types.html#cb39-4"></a>  <span class="fu">EXTRACT</span>(d <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">day</span></span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-6">Table 3.6: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">date</th>
+<th align="right">year</th>
+<th align="right">month</th>
+<th align="right">day</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2020-07-30</td>
+<td align="right">2020</td>
+<td align="right">7</td>
+<td align="right">30</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We can also extract components like day of the week, week of the year, or quarter. Note that <code>dow</code> and <code>isodow</code> use different standard to extract day-of-week component. <code>dow</code> starts at 0 (Sunday) and goes up to Saturday, while <code>isodow</code> which starts at
+1 (Monday) and goes up to 7 (Sunday)</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb40-1"><a href="data-types.html#cb40-1"></a><span class="kw">SELECT</span> <span class="fu">current_date</span>,</span>
+<span id="cb40-2"><a href="data-types.html#cb40-2"></a>  <span class="fu">EXTRACT</span>(isodow <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> day_of_week,</span>
+<span id="cb40-3"><a href="data-types.html#cb40-3"></a>  <span class="fu">EXTRACT</span>(week <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> week_of_year,</span>
+<span id="cb40-4"><a href="data-types.html#cb40-4"></a>  <span class="fu">EXTRACT</span>(quarter <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> quarter</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-7">Table 3.7: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">date</th>
+<th align="right">day_of_week</th>
+<th align="right">week_of_year</th>
+<th align="right">quarter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2020-07-30</td>
+<td align="right">4</td>
+<td align="right">31</td>
+<td align="right">3</td>
 </tr>
 </tbody>
 </table>
 </div>
 
-</div>
 </div>
 </div>
             </section>
@@ -289,7 +373,7 @@ column to.</p>
         </div>
       </div>
 <a href="joining.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="solutions-to-interview-questions.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="solutions-to-sql-puzzles.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -164,9 +164,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.4" data-path="filtering.html"><a href="filtering.html#the-having-clause"><i class="fa fa-check"></i><b>3.4</b> The <code>HAVING</code> clause</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="aggregating.html"><a href="aggregating.html"><i class="fa fa-check"></i><b>4</b> Aggregating</a><ul>
+<li class="chapter" data-level="4.0.1" data-path="aggregating.html"><a href="aggregating.html#rowwise-aggregating"><i class="fa fa-check"></i><b>4.0.1</b> rowwise aggregating</a></li>
 <li class="chapter" data-level="4.1" data-path="aggregating.html"><a href="aggregating.html#the-group-by-clause."><i class="fa fa-check"></i><b>4.1</b> The <code>GROUP BY</code> clause.</a></li>
-<li class="chapter" data-level="4.2" data-path="aggregating.html"><a href="aggregating.html#null-values-in-aggregation"><i class="fa fa-check"></i><b>4.2</b> NULL values in aggregation</a></li>
-<li class="chapter" data-level="4.3" data-path="aggregating.html"><a href="aggregating.html#using-group-by-in-non-aggregating-scenarios"><i class="fa fa-check"></i><b>4.3</b> Using <code>GROUP BY</code> in non-aggregating scenarios</a></li>
+<li class="chapter" data-level="4.2" data-path="aggregating.html"><a href="aggregating.html#common-aggregating-functions"><i class="fa fa-check"></i><b>4.2</b> Common aggregating functions</a></li>
+<li class="chapter" data-level="4.3" data-path="aggregating.html"><a href="aggregating.html#null-values-in-aggregation"><i class="fa fa-check"></i><b>4.3</b> NULL values in aggregation</a></li>
+<li class="chapter" data-level="4.4" data-path="aggregating.html"><a href="aggregating.html#using-group-by-in-non-aggregating-scenarios"><i class="fa fa-check"></i><b>4.4</b> Using <code>GROUP BY</code> in non-aggregating scenarios</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="window-functions.html"><a href="window-functions.html"><i class="fa fa-check"></i><b>5</b> Window functions</a><ul>
 <li class="chapter" data-level="5.1" data-path="window-functions.html"><a href="window-functions.html#statisticcs-with-window-functions"><i class="fa fa-check"></i><b>5.1</b> Statisticcs with window functions</a></li>
@@ -174,11 +176,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6" data-path="joining.html"><a href="joining.html"><i class="fa fa-check"></i><b>6</b> Joining</a></li>
 <li class="chapter" data-level="7" data-path="data-types.html"><a href="data-types.html"><i class="fa fa-check"></i><b>7</b> Data types</a><ul>
 <li class="chapter" data-level="7.1" data-path="data-types.html"><a href="data-types.html#converting-data-types"><i class="fa fa-check"></i><b>7.1</b> Converting data types</a></li>
-<li class="chapter" data-level="7.2" data-path="data-types.html"><a href="data-types.html#type-specific-operations"><i class="fa fa-check"></i><b>7.2</b> Type-specific operations</a><ul>
-<li class="chapter" data-level="7.2.1" data-path="data-types.html"><a href="data-types.html#date-and-time"><i class="fa fa-check"></i><b>7.2.1</b> Date and time</a></li>
+<li class="chapter" data-level="7.2" data-path="data-types.html"><a href="data-types.html#date-and-time"><i class="fa fa-check"></i><b>7.2</b> Date and time</a></li>
 </ul></li>
-</ul></li>
-<li class="chapter" data-level="8" data-path="solutions-to-interview-questions.html"><a href="solutions-to-interview-questions.html"><i class="fa fa-check"></i><b>8</b> Solutions to interview questions</a></li>
+<li class="chapter" data-level="8" data-path="solutions-to-sql-puzzles.html"><a href="solutions-to-sql-puzzles.html"><i class="fa fa-check"></i><b>8</b> Solutions to SQL puzzles</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li>
@@ -205,9 +205,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="aggregating" class="section level1">
 <h1><span class="header-section-number">Chapter 4</span> Aggregating</h1>
 <p>In each of the examples, the expression aggregates over all the rows, and returns a single row.</p>
-<p>That’s what makes these expressions <strong>aggregate expressions</strong>. They can combine values from multiple rows, aggregating them together. These are different from the expressions earlier like <code>round</code>, <code>strsub</code> , which operate independently on the values in each row. Those are called non-aggregate
-expressions or <strong>scalar expressions</strong>. They return one value per row. One need to be careful about mixing aggregate and scalar operations. You can use aggregate and scalar operations together in
-an expression as in the following examples.</p>
+<p>That’s what makes these expressions <strong>aggregate expressions</strong>. They can combine values from multiple rows, aggregating them together. These are different from the arithmetic operations like <code>+</code>, <code>-</code>, <code>*</code> and <code>/</code>, or functions like <code>ROUND</code>, <code>STRSUB</code> , which operate independently on the values in each row, and return a column whose length equals that of the whole table. Those are called <strong>non-aggregate</strong> expressions.</p>
+<p>One need to be careful about mixing aggregate and non-aggregate operations. You can use aggregate and non-aggregate operations together in an expression as in the following examples.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb15-1"><a href="aggregating.html#cb15-1"></a><span class="kw">SELECT</span> <span class="fu">ROUND</span>(<span class="fu">AVG</span>(salary), <span class="dv">1</span>) <span class="kw">AS</span> avg_salary </span>
 <span id="cb15-2"><a href="aggregating.html#cb15-2"></a><span class="kw">FROM</span> employees </span></code></pre></div>
 <div class="knitsql-table">
@@ -242,27 +241,28 @@ an expression as in the following examples.</p>
 </tbody>
 </table>
 </div>
-<p>Unfortunately, there are also invalid mix of aggregation expression and scalar expressions.</p>
+<p>Unfortunately, there are also invalid mix of aggregation expression and non-aggreagate expressions. Suppose we want to know the difference between one’s salary and the highest salary in the table</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb17-1"><a href="aggregating.html#cb17-1"></a><span class="co">-- not run</span></span>
-<span id="cb17-2"><a href="aggregating.html#cb17-2"></a><span class="kw">SELECT</span> salary <span class="op">-</span> <span class="fu">AVG</span>(salary) </span>
+<span id="cb17-2"><a href="aggregating.html#cb17-2"></a><span class="kw">SELECT</span> salary <span class="op">-</span> <span class="fu">max</span>(salary) </span>
 <span id="cb17-3"><a href="aggregating.html#cb17-3"></a><span class="kw">FROM</span> employees</span></code></pre></div>
-<p>This query will throw an error message like <strong>“employees.salary must appear in the GROUP BY clause or be used in an aggregate function”</strong>. For R users, this may be a bit confusing, since similar dplyr expresisons work just fine:</p>
+<p>This query will throw an error message like <strong>“employees.salary must appear in the GROUP BY clause or be used in an aggregate function”</strong>. For R users, this may be a bit confusing, since similar dplyr expressions work just fine:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="aggregating.html#cb18-1"></a><span class="kw">library</span>(dplyr)</span>
 <span id="cb18-2"><a href="aggregating.html#cb18-2"></a>employees &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data/employees.csv&quot;</span>)</span>
 <span id="cb18-3"><a href="aggregating.html#cb18-3"></a></span>
 <span id="cb18-4"><a href="aggregating.html#cb18-4"></a>employees <span class="op">%&gt;%</span></span>
-<span id="cb18-5"><a href="aggregating.html#cb18-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">difference =</span> salary <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(salary))</span>
+<span id="cb18-5"><a href="aggregating.html#cb18-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">difference =</span> salary <span class="op">-</span><span class="st"> </span><span class="kw">max</span>(salary))</span>
 <span id="cb18-6"><a href="aggregating.html#cb18-6"></a><span class="co">#&gt; # A tibble: 5 x 6</span></span>
 <span id="cb18-7"><a href="aggregating.html#cb18-7"></a><span class="co">#&gt;   empl_id first_name last_name salary office_id difference</span></span>
 <span id="cb18-8"><a href="aggregating.html#cb18-8"></a><span class="co">#&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;</span></span>
-<span id="cb18-9"><a href="aggregating.html#cb18-9"></a><span class="co">#&gt; 1       1 Ambrosio   Rojas      25784 c            -11297.</span></span>
-<span id="cb18-10"><a href="aggregating.html#cb18-10"></a><span class="co">#&gt; 2       2 Val        Snyder     37506 e               425.</span></span>
-<span id="cb18-11"><a href="aggregating.html#cb18-11"></a><span class="co">#&gt; 3       3 Virginia   Levitt     54523 b             17442.</span></span>
-<span id="cb18-12"><a href="aggregating.html#cb18-12"></a><span class="co">#&gt; 4       4 Sabahattin Tilki      28060 a             -9021.</span></span>
-<span id="cb18-13"><a href="aggregating.html#cb18-13"></a><span class="co">#&gt; 5       5 Lujza      Csizmadia  39530 b              2449.</span></span></code></pre></div>
+<span id="cb18-9"><a href="aggregating.html#cb18-9"></a><span class="co">#&gt; 1       1 Ambrosio   Rojas      25784 c             -28739</span></span>
+<span id="cb18-10"><a href="aggregating.html#cb18-10"></a><span class="co">#&gt; 2       2 Val        Snyder     37506 e             -17017</span></span>
+<span id="cb18-11"><a href="aggregating.html#cb18-11"></a><span class="co">#&gt; 3       3 Virginia   Levitt     54523 b                  0</span></span>
+<span id="cb18-12"><a href="aggregating.html#cb18-12"></a><span class="co">#&gt; 4       4 Sabahattin Tilki      28060 a             -26463</span></span>
+<span id="cb18-13"><a href="aggregating.html#cb18-13"></a><span class="co">#&gt; 5       5 Lujza      Csizmadia  39530 b             -14993</span></span></code></pre></div>
+<p>This is because the R language recycles the one element scalar <code>mean(salary)</code> to match its length to <code>salary</code>. SQL, on the other hand, does not know how to subtract one row from multiple rows.</p>
 <p>For now, the workaround is to use <strong>subqueries</strong>. Later we will see another solution using window functions in Chapter <a href="window-functions.html#window-functions">5</a>.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb19-1"><a href="aggregating.html#cb19-1"></a><span class="kw">SELECT</span> salary <span class="op">-</span> </span>
-<span id="cb19-2"><a href="aggregating.html#cb19-2"></a>  (<span class="kw">SELECT</span> <span class="fu">AVG</span>(salary) <span class="kw">FROM</span> employees)</span>
+<span id="cb19-2"><a href="aggregating.html#cb19-2"></a>  (<span class="kw">SELECT</span> <span class="fu">MAX</span>(salary) <span class="kw">FROM</span> employees)</span>
 <span id="cb19-3"><a href="aggregating.html#cb19-3"></a>  <span class="kw">AS</span> difference</span>
 <span id="cb19-4"><a href="aggregating.html#cb19-4"></a><span class="kw">FROM</span> employees</span></code></pre></div>
 <div class="knitsql-table">
@@ -275,28 +275,35 @@ an expression as in the following examples.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">-11297</td>
+<td align="right">-28739</td>
 </tr>
 <tr class="even">
-<td align="right">425</td>
+<td align="right">-17017</td>
 </tr>
 <tr class="odd">
-<td align="right">17442</td>
+<td align="right">0</td>
 </tr>
 <tr class="even">
-<td align="right">-9021</td>
+<td align="right">-26463</td>
 </tr>
 <tr class="odd">
-<td align="right">2449</td>
+<td align="right">-14993</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Also, you cannot use both scalar and aggregate expressions in <code>SELECT</code>. For example, the following query has two items in the <code>SELECT</code> list.</p>
+<p>Also, you cannot select aggregating expressions and regular columns in parallel. For example, the following query has two items in the <code>SELECT</code> list.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb20-1"><a href="aggregating.html#cb20-1"></a><span class="co">-- not run</span></span>
-<span id="cb20-2"><a href="aggregating.html#cb20-2"></a><span class="kw">SELECT</span> first_name, <span class="fu">sum</span>(salary) <span class="kw">FROM</span> employees</span></code></pre></div>
-<p>The first is just the column reference first name, that evaluates as a scalar expression. It returns a value for each row in the <code>employees</code> table. The second is the aggregate expression, sum salary. That returns just one row that aggregates all the salary values in the <code>employees</code> table.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb21-1"><a href="aggregating.html#cb21-1"></a><span class="kw">SELECT</span> red, green, blue, <span class="fu">GREATEST</span>(red, green, blue) <span class="kw">FROM</span> crayons</span></code></pre></div>
+<span id="cb20-2"><a href="aggregating.html#cb20-2"></a><span class="kw">SELECT</span> first_name, <span class="fu">max</span>(salary) <span class="kw">FROM</span> employees</span></code></pre></div>
+<p>The first is just the column reference first name, that evaluates as a scalar expression. It returns a value for each row in the <code>employees</code> table. The second is the aggregate expression, max salary. That returns one row that aggregates all the salary values in the <code>employees</code> table.</p>
+<div id="rowwise-aggregating" class="section level3">
+<h3><span class="header-section-number">4.0.1</span> rowwise aggregating</h3>
+<p>There are functions in SQL that are designed to perform computations per row, instead of across rows. For them, we need not to worry about the unmatched length problem.</p>
+<p>For example, there are non-aggregate <code>GREATEST()</code> for <code>MAX()</code>, and <code>LEAST</code> for <code>MIN()</code></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb21-1"><a href="aggregating.html#cb21-1"></a><span class="co">-- what is the dominant and least-used color for each crayon? </span></span>
+<span id="cb21-2"><a href="aggregating.html#cb21-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb21-3"><a href="aggregating.html#cb21-3"></a>  red, green, blue, <span class="fu">GREATEST</span>(red, green, blue), <span class="fu">LEAST</span>(red, green, blue)</span>
+<span id="cb21-4"><a href="aggregating.html#cb21-4"></a><span class="kw">FROM</span> crayons</span></code></pre></div>
 <div class="knitsql-table">
 <table>
 <caption><span id="tab:unnamed-chunk-7">Table 3.7: </span>Displaying records 1 - 10</caption>
@@ -306,6 +313,7 @@ an expression as in the following examples.</p>
 <th align="right">green</th>
 <th align="right">blue</th>
 <th align="right">greatest</th>
+<th align="right">least</th>
 </tr>
 </thead>
 <tbody>
@@ -314,56 +322,66 @@ an expression as in the following examples.</p>
 <td align="right">219</td>
 <td align="right">197</td>
 <td align="right">239</td>
+<td align="right">197</td>
 </tr>
 <tr class="even">
 <td align="right">205</td>
 <td align="right">149</td>
 <td align="right">117</td>
 <td align="right">205</td>
+<td align="right">117</td>
 </tr>
 <tr class="odd">
 <td align="right">253</td>
 <td align="right">217</td>
 <td align="right">181</td>
 <td align="right">253</td>
+<td align="right">181</td>
 </tr>
 <tr class="even">
 <td align="right">120</td>
 <td align="right">219</td>
 <td align="right">226</td>
 <td align="right">226</td>
+<td align="right">120</td>
 </tr>
 <tr class="odd">
 <td align="right">135</td>
 <td align="right">169</td>
 <td align="right">107</td>
 <td align="right">169</td>
+<td align="right">107</td>
 </tr>
 <tr class="even">
 <td align="right">255</td>
 <td align="right">164</td>
 <td align="right">116</td>
 <td align="right">255</td>
+<td align="right">116</td>
 </tr>
 <tr class="odd">
 <td align="right">250</td>
 <td align="right">231</td>
 <td align="right">181</td>
 <td align="right">250</td>
+<td align="right">181</td>
 </tr>
 <tr class="even">
 <td align="right">159</td>
 <td align="right">129</td>
 <td align="right">112</td>
 <td align="right">159</td>
+<td align="right">112</td>
 </tr>
 <tr class="odd">
 <td align="right">253</td>
 <td align="right">124</td>
 <td align="right">110</td>
 <td align="right">253</td>
+<td align="right">110</td>
 </tr>
 <tr class="even">
+<td align="right">35</td>
 <td align="right">35</td>
 <td align="right">35</td>
 <td align="right">35</td>
@@ -372,16 +390,38 @@ an expression as in the following examples.</p>
 </tbody>
 </table>
 </div>
+<p>This is much like the rowwise mechanism introduced since dplyr 1.0</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="aggregating.html#cb22-1"></a>crayon &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data/crayons.csv&quot;</span>)</span>
+<span id="cb22-2"><a href="aggregating.html#cb22-2"></a>crayon <span class="op">%&gt;%</span></span>
+<span id="cb22-3"><a href="aggregating.html#cb22-3"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb22-4"><a href="aggregating.html#cb22-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dominant =</span> <span class="kw">max</span>(<span class="kw">c</span>(red, green, blue)),</span>
+<span id="cb22-5"><a href="aggregating.html#cb22-5"></a>         <span class="st">`</span><span class="dt">least used</span><span class="st">`</span> =<span class="st"> </span><span class="kw">min</span>(<span class="kw">c</span>(red, green, blue)))</span>
+<span id="cb22-6"><a href="aggregating.html#cb22-6"></a><span class="co">#&gt; # A tibble: 120 x 8</span></span>
+<span id="cb22-7"><a href="aggregating.html#cb22-7"></a><span class="co">#&gt; # Rowwise: </span></span>
+<span id="cb22-8"><a href="aggregating.html#cb22-8"></a><span class="co">#&gt;    color            hex      red green  blue  pack dominant `least used`</span></span>
+<span id="cb22-9"><a href="aggregating.html#cb22-9"></a><span class="co">#&gt;    &lt;chr&gt;            &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;</span></span>
+<span id="cb22-10"><a href="aggregating.html#cb22-10"></a><span class="co">#&gt;  1 Almond           EFDBC5   239   219   197   120      239          197</span></span>
+<span id="cb22-11"><a href="aggregating.html#cb22-11"></a><span class="co">#&gt;  2 Antique Brass    CD9575   205   149   117   120      205          117</span></span>
+<span id="cb22-12"><a href="aggregating.html#cb22-12"></a><span class="co">#&gt;  3 Apricot          FDD9B5   253   217   181    24      253          181</span></span>
+<span id="cb22-13"><a href="aggregating.html#cb22-13"></a><span class="co">#&gt;  4 Aquamarine       78DBE2   120   219   226   120      226          120</span></span>
+<span id="cb22-14"><a href="aggregating.html#cb22-14"></a><span class="co">#&gt;  5 Asparagus        87A96B   135   169   107    64      169          107</span></span>
+<span id="cb22-15"><a href="aggregating.html#cb22-15"></a><span class="co">#&gt;  6 Atomic Tangerine FFA474   255   164   116    96      255          116</span></span>
+<span id="cb22-16"><a href="aggregating.html#cb22-16"></a><span class="co">#&gt;  7 Banana Mania     FAE7B5   250   231   181   120      250          181</span></span>
+<span id="cb22-17"><a href="aggregating.html#cb22-17"></a><span class="co">#&gt;  8 Beaver           9F8170   159   129   112   120      159          112</span></span>
+<span id="cb22-18"><a href="aggregating.html#cb22-18"></a><span class="co">#&gt;  9 Bittersweet      FD7C6E   253   124   110    64      253          110</span></span>
+<span id="cb22-19"><a href="aggregating.html#cb22-19"></a><span class="co">#&gt; 10 Black            232323    35    35    35     8       35           35</span></span>
+<span id="cb22-20"><a href="aggregating.html#cb22-20"></a><span class="co">#&gt; # ... with 110 more rows</span></span></code></pre></div>
+</div>
 <div id="the-group-by-clause." class="section level2">
 <h2><span class="header-section-number">4.1</span> The <code>GROUP BY</code> clause.</h2>
 <p>No surprise, the <code>GROUP BY</code> clasue works hand in hand with aggregate expressions, as <code>group_by()</code> does with <code>summarize()</code> in dplyr.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb22-1"><a href="aggregating.html#cb22-1"></a><span class="kw">SELECT</span> min_age, <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
-<span id="cb22-2"><a href="aggregating.html#cb22-2"></a><span class="kw">FROM</span> games</span>
-<span id="cb22-3"><a href="aggregating.html#cb22-3"></a><span class="kw">WHERE</span> list_price <span class="op">&gt;</span> <span class="dv">10</span></span>
-<span id="cb22-4"><a href="aggregating.html#cb22-4"></a><span class="kw">GROUP</span> <span class="kw">BY</span> min_age;</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb23-1"><a href="aggregating.html#cb23-1"></a><span class="kw">SELECT</span> min_age, <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
+<span id="cb23-2"><a href="aggregating.html#cb23-2"></a><span class="kw">FROM</span> games</span>
+<span id="cb23-3"><a href="aggregating.html#cb23-3"></a><span class="kw">WHERE</span> list_price <span class="op">&gt;</span> <span class="dv">10</span></span>
+<span id="cb23-4"><a href="aggregating.html#cb23-4"></a><span class="kw">GROUP</span> <span class="kw">BY</span> min_age;</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-8">Table 3.8: </span>2 records</caption>
+<caption><span id="tab:unnamed-chunk-9">Table 3.9: </span>2 records</caption>
 <thead>
 <tr class="header">
 <th align="right">min_age</th>
@@ -401,12 +441,12 @@ an expression as in the following examples.</p>
 </table>
 </div>
 <p>Grouping expressions using column aliases, availabe in PostgreSQL, Impala, Mysql.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb23-1"><a href="aggregating.html#cb23-1"></a><span class="kw">SELECT</span> list_price <span class="op">&lt;</span> <span class="dv">10</span> <span class="kw">AS</span> low_price, <span class="fu">count</span>(<span class="op">*</span>) </span>
-<span id="cb23-2"><a href="aggregating.html#cb23-2"></a><span class="kw">FROM</span> games</span>
-<span id="cb23-3"><a href="aggregating.html#cb23-3"></a><span class="kw">GROUP</span> <span class="kw">BY</span> low_price</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb24-1"><a href="aggregating.html#cb24-1"></a><span class="kw">SELECT</span> list_price <span class="op">&lt;</span> <span class="dv">10</span> <span class="kw">AS</span> low_price, <span class="fu">count</span>(<span class="op">*</span>) </span>
+<span id="cb24-2"><a href="aggregating.html#cb24-2"></a><span class="kw">FROM</span> games</span>
+<span id="cb24-3"><a href="aggregating.html#cb24-3"></a><span class="kw">GROUP</span> <span class="kw">BY</span> low_price</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-9">Table 3.9: </span>2 records</caption>
+<caption><span id="tab:unnamed-chunk-10">Table 4.1: </span>2 records</caption>
 <thead>
 <tr class="header">
 <th align="left">low_price</th>
@@ -425,10 +465,10 @@ an expression as in the following examples.</p>
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb24"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb24-1"><a href="aggregating.html#cb24-1"></a><span class="kw">SELECT</span> list_price <span class="op">&lt;</span> <span class="dv">10</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> games <span class="kw">GROUP</span> <span class="kw">BY</span> list_price <span class="op">&lt;</span> <span class="dv">10</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb25-1"><a href="aggregating.html#cb25-1"></a><span class="kw">SELECT</span> list_price <span class="op">&lt;</span> <span class="dv">10</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">FROM</span> games <span class="kw">GROUP</span> <span class="kw">BY</span> list_price <span class="op">&lt;</span> <span class="dv">10</span>;</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-10">Table 4.1: </span>2 records</caption>
+<caption><span id="tab:unnamed-chunk-11">Table 4.2: </span>2 records</caption>
 <thead>
 <tr class="header">
 <th align="left">?column?</th>
@@ -447,12 +487,12 @@ an expression as in the following examples.</p>
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb25"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb25-1"><a href="aggregating.html#cb25-1"></a><span class="kw">SELECT</span> list_price <span class="op">&gt;</span> <span class="dv">20</span> <span class="kw">AS</span> over_20, max_players, <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
-<span id="cb25-2"><a href="aggregating.html#cb25-2"></a><span class="kw">FROM</span> games</span>
-<span id="cb25-3"><a href="aggregating.html#cb25-3"></a><span class="kw">GROUP</span> <span class="kw">BY</span> over_20, max_players;</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb26-1"><a href="aggregating.html#cb26-1"></a><span class="kw">SELECT</span> (list_price) <span class="op">&gt;</span> <span class="dv">20</span> <span class="kw">AS</span> over_20, max_players, <span class="fu">COUNT</span>(<span class="op">*</span>)</span>
+<span id="cb26-2"><a href="aggregating.html#cb26-2"></a><span class="kw">FROM</span> games</span>
+<span id="cb26-3"><a href="aggregating.html#cb26-3"></a><span class="kw">GROUP</span> <span class="kw">BY</span> over_20, max_players;</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-11">Table 4.2: </span>3 records</caption>
+<caption><span id="tab:unnamed-chunk-12">Table 4.3: </span>3 records</caption>
 <thead>
 <tr class="header">
 <th align="left">over_20</th>
@@ -479,54 +519,101 @@ an expression as in the following examples.</p>
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb26"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb26-1"><a href="aggregating.html#cb26-1"></a><span class="kw">SELECT</span> shop, <span class="fu">SUM</span>((price <span class="kw">IS</span>  <span class="kw">NULL</span>):<span class="ch">:int</span>), <span class="fu">COUNT</span>(<span class="op">*</span>) </span>
-<span id="cb26-2"><a href="aggregating.html#cb26-2"></a><span class="kw">FROM</span> inventory</span>
-<span id="cb26-3"><a href="aggregating.html#cb26-3"></a><span class="kw">GROUP</span> <span class="kw">BY</span> shop</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb27-1"><a href="aggregating.html#cb27-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> games</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-12">Table 4.3: </span>2 records</caption>
+<caption><span id="tab:unnamed-chunk-13">Table 4.4: </span>5 records</caption>
 <thead>
 <tr class="header">
-<th align="left">shop</th>
-<th align="right">sum</th>
-<th align="right">count</th>
+<th align="left">id</th>
+<th align="left">name</th>
+<th align="left">inventor</th>
+<th align="right">year</th>
+<th align="right">min_age</th>
+<th align="right">min_players</th>
+<th align="right">max_players</th>
+<th align="right">list_price</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Board ’Em</td>
-<td align="right">1</td>
-<td align="right">3</td>
+<td align="left">1</td>
+<td align="left">Monopoly</td>
+<td align="left">Elizabeth Magie</td>
+<td align="right">1903</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">6</td>
+<td align="right">19.99</td>
 </tr>
 <tr class="even">
-<td align="left">Dicey</td>
-<td align="right">0</td>
+<td align="left">2</td>
+<td align="left">Scrabble</td>
+<td align="left">Alfred Mosher Butts</td>
+<td align="right">1938</td>
+<td align="right">8</td>
 <td align="right">2</td>
+<td align="right">4</td>
+<td align="right">17.99</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">Clue</td>
+<td align="left">Anthony E. Pratt</td>
+<td align="right">1944</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">6</td>
+<td align="right">9.99</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">Candy Land</td>
+<td align="left">Eleanor Abbott</td>
+<td align="right">1948</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">7.99</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">Risk</td>
+<td align="left">Albert Lamorisse</td>
+<td align="right">1957</td>
+<td align="right">10</td>
+<td align="right">2</td>
+<td align="right">5</td>
+<td align="right">29.99</td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>One of the major limitations of the <code>GROUP BY</code> clause is that it left you few choices in the <code>SELECT</code> list: <strong>either an aggregate expression or columns that appear in <code>GROUP BY</code></strong></p>
+</div>
+<div id="common-aggregating-functions" class="section level2">
+<h2><span class="header-section-number">4.2</span> Common aggregating functions</h2>
 </div>
 <div id="null-values-in-aggregation" class="section level2">
-<h2><span class="header-section-number">4.2</span> NULL values in aggregation</h2>
+<h2><span class="header-section-number">4.3</span> NULL values in aggregation</h2>
 <p>The <code>COUNT</code> function was designed to be consistent with these other aggregate functions
 except in the case where you use <code>COUNT(*)</code>. So the general rule is that aggregate functions ignore <code>NULL</code> values, and the one exception to that rule is when you use <code>COUNT(*)</code>.</p>
 <p>With some SQL engines, you can specify more than one column reference or expression after the <code>DISTINCT</code> keyword in the <code>COUNT</code> function. This returns the number of unique combinations of the specified columns that exist in the data. This works in Hive, Impala, and MySQL, but <strong>not</strong> in PostgreSQL.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb27-1"><a href="aggregating.html#cb27-1"></a><span class="co">-- this won&#39;t work in PostgreSQL</span></span>
-<span id="cb27-2"><a href="aggregating.html#cb27-2"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> red, green, blue) <span class="kw">FROM</span> crayons</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb28-1"><a href="aggregating.html#cb28-1"></a><span class="co">-- this won&#39;t work in PostgreSQL</span></span>
+<span id="cb28-2"><a href="aggregating.html#cb28-2"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> red, green, blue) <span class="kw">FROM</span> crayons</span></code></pre></div>
 <p>Also, with some SQL engines, you can use more than one <code>COUNT(DISTINCT)</code> in a <code>SELECT</code> list,
 like in this example which uses the crayons table.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb28-1"><a href="aggregating.html#cb28-1"></a><span class="co">-- PostgreSQL allows for multiple COUNT(DISTINCT) in one select list</span></span>
-<span id="cb28-2"><a href="aggregating.html#cb28-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb28-3"><a href="aggregating.html#cb28-3"></a>  pack,</span>
-<span id="cb28-4"><a href="aggregating.html#cb28-4"></a>  <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> red) <span class="kw">AS</span> red_count,</span>
-<span id="cb28-5"><a href="aggregating.html#cb28-5"></a>  <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> green) <span class="kw">AS</span> green_count,</span>
-<span id="cb28-6"><a href="aggregating.html#cb28-6"></a>  <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> blue) <span class="kw">AS</span> blue_count</span>
-<span id="cb28-7"><a href="aggregating.html#cb28-7"></a><span class="kw">FROM</span> crayons</span>
-<span id="cb28-8"><a href="aggregating.html#cb28-8"></a><span class="kw">GROUP</span> <span class="kw">BY</span> pack</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb29-1"><a href="aggregating.html#cb29-1"></a><span class="co">-- PostgreSQL allows for multiple COUNT(DISTINCT) in one select list</span></span>
+<span id="cb29-2"><a href="aggregating.html#cb29-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb29-3"><a href="aggregating.html#cb29-3"></a>  pack,</span>
+<span id="cb29-4"><a href="aggregating.html#cb29-4"></a>  <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> red) <span class="kw">AS</span> red_count,</span>
+<span id="cb29-5"><a href="aggregating.html#cb29-5"></a>  <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> green) <span class="kw">AS</span> green_count,</span>
+<span id="cb29-6"><a href="aggregating.html#cb29-6"></a>  <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span> blue) <span class="kw">AS</span> blue_count</span>
+<span id="cb29-7"><a href="aggregating.html#cb29-7"></a><span class="kw">FROM</span> crayons</span>
+<span id="cb29-8"><a href="aggregating.html#cb29-8"></a><span class="kw">GROUP</span> <span class="kw">BY</span> pack</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-14">Table 4.4: </span>9 records</caption>
+<caption><span id="tab:unnamed-chunk-15">Table 4.5: </span>9 records</caption>
 <thead>
 <tr class="header">
 <th align="right">pack</th>
@@ -596,33 +683,33 @@ like in this example which uses the crayons table.</p>
 <p>Here, the COUNT function is used three separate times in the <code>SELECT</code> list and the <code>DISTINCT</code> keyword is included in all three. So the result set has three columns giving the number of unique values in the red column, the number of unique values in the green column, and the number of unique values in the blue column. But with some other SQL engines including Impala, you are limited to only one<code>COUNT(DISTINCT)</code> per <code>SELECT</code> list.</p>
 </div>
 <div id="using-group-by-in-non-aggregating-scenarios" class="section level2">
-<h2><span class="header-section-number">4.3</span> Using <code>GROUP BY</code> in non-aggregating scenarios</h2>
+<h2><span class="header-section-number">4.4</span> Using <code>GROUP BY</code> in non-aggregating scenarios</h2>
 <p>We may question the data quality of <code>us_counties_2010</code> cencus: specifically, can there be repetition of observations on counties on the state level? We may want to use <code>DISTINCT(geo_name)</code> and <code>GROUP BY state_us_abbreviation</code> to eliminate those repetitions:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb29-1"><a href="aggregating.html#cb29-1"></a><span class="co">-- not run</span></span>
-<span id="cb29-2"><a href="aggregating.html#cb29-2"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span>(geo_name) </span>
-<span id="cb29-3"><a href="aggregating.html#cb29-3"></a><span class="kw">FROM</span> us_counties_2010</span>
-<span id="cb29-4"><a href="aggregating.html#cb29-4"></a><span class="kw">GROUP</span> <span class="kw">BY</span> state_us_abbreviation</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb30-1"><a href="aggregating.html#cb30-1"></a><span class="co">-- not run</span></span>
+<span id="cb30-2"><a href="aggregating.html#cb30-2"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span>(geo_name) </span>
+<span id="cb30-3"><a href="aggregating.html#cb30-3"></a><span class="kw">FROM</span> us_counties_2010</span>
+<span id="cb30-4"><a href="aggregating.html#cb30-4"></a><span class="kw">GROUP</span> <span class="kw">BY</span> state_us_abbreviation</span></code></pre></div>
 <p>This works in dplyr</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="aggregating.html#cb30-1"></a><span class="co"># dplyr</span></span>
-<span id="cb30-2"><a href="aggregating.html#cb30-2"></a>us_counties_<span class="dv">2010</span> &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data/us_counties_2010.csv&quot;</span>)</span>
-<span id="cb30-3"><a href="aggregating.html#cb30-3"></a>us_counties_<span class="dv">2010</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb30-4"><a href="aggregating.html#cb30-4"></a><span class="st">  </span><span class="kw">group_by</span>(state_us_abbreviation) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb30-5"><a href="aggregating.html#cb30-5"></a><span class="st">  </span><span class="kw">distinct</span>(geo_name)</span>
-<span id="cb30-6"><a href="aggregating.html#cb30-6"></a><span class="co">#&gt; # A tibble: 3,143 x 2</span></span>
-<span id="cb30-7"><a href="aggregating.html#cb30-7"></a><span class="co">#&gt; # Groups:   state_us_abbreviation [51]</span></span>
-<span id="cb30-8"><a href="aggregating.html#cb30-8"></a><span class="co">#&gt;    geo_name        state_us_abbreviation</span></span>
-<span id="cb30-9"><a href="aggregating.html#cb30-9"></a><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;                </span></span>
-<span id="cb30-10"><a href="aggregating.html#cb30-10"></a><span class="co">#&gt;  1 Autauga County  AL                   </span></span>
-<span id="cb30-11"><a href="aggregating.html#cb30-11"></a><span class="co">#&gt;  2 Baldwin County  AL                   </span></span>
-<span id="cb30-12"><a href="aggregating.html#cb30-12"></a><span class="co">#&gt;  3 Barbour County  AL                   </span></span>
-<span id="cb30-13"><a href="aggregating.html#cb30-13"></a><span class="co">#&gt;  4 Bibb County     AL                   </span></span>
-<span id="cb30-14"><a href="aggregating.html#cb30-14"></a><span class="co">#&gt;  5 Blount County   AL                   </span></span>
-<span id="cb30-15"><a href="aggregating.html#cb30-15"></a><span class="co">#&gt;  6 Bullock County  AL                   </span></span>
-<span id="cb30-16"><a href="aggregating.html#cb30-16"></a><span class="co">#&gt;  7 Butler County   AL                   </span></span>
-<span id="cb30-17"><a href="aggregating.html#cb30-17"></a><span class="co">#&gt;  8 Calhoun County  AL                   </span></span>
-<span id="cb30-18"><a href="aggregating.html#cb30-18"></a><span class="co">#&gt;  9 Chambers County AL                   </span></span>
-<span id="cb30-19"><a href="aggregating.html#cb30-19"></a><span class="co">#&gt; 10 Cherokee County AL                   </span></span>
-<span id="cb30-20"><a href="aggregating.html#cb30-20"></a><span class="co">#&gt; # ... with 3,133 more rows</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="aggregating.html#cb31-1"></a><span class="co"># dplyr</span></span>
+<span id="cb31-2"><a href="aggregating.html#cb31-2"></a>us_counties_<span class="dv">2010</span> &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data/us_counties_2010.csv&quot;</span>)</span>
+<span id="cb31-3"><a href="aggregating.html#cb31-3"></a>us_counties_<span class="dv">2010</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb31-4"><a href="aggregating.html#cb31-4"></a><span class="st">  </span><span class="kw">group_by</span>(state_us_abbreviation) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb31-5"><a href="aggregating.html#cb31-5"></a><span class="st">  </span><span class="kw">distinct</span>(geo_name)</span>
+<span id="cb31-6"><a href="aggregating.html#cb31-6"></a><span class="co">#&gt; # A tibble: 3,143 x 2</span></span>
+<span id="cb31-7"><a href="aggregating.html#cb31-7"></a><span class="co">#&gt; # Groups:   state_us_abbreviation [51]</span></span>
+<span id="cb31-8"><a href="aggregating.html#cb31-8"></a><span class="co">#&gt;    geo_name        state_us_abbreviation</span></span>
+<span id="cb31-9"><a href="aggregating.html#cb31-9"></a><span class="co">#&gt;    &lt;chr&gt;           &lt;chr&gt;                </span></span>
+<span id="cb31-10"><a href="aggregating.html#cb31-10"></a><span class="co">#&gt;  1 Autauga County  AL                   </span></span>
+<span id="cb31-11"><a href="aggregating.html#cb31-11"></a><span class="co">#&gt;  2 Baldwin County  AL                   </span></span>
+<span id="cb31-12"><a href="aggregating.html#cb31-12"></a><span class="co">#&gt;  3 Barbour County  AL                   </span></span>
+<span id="cb31-13"><a href="aggregating.html#cb31-13"></a><span class="co">#&gt;  4 Bibb County     AL                   </span></span>
+<span id="cb31-14"><a href="aggregating.html#cb31-14"></a><span class="co">#&gt;  5 Blount County   AL                   </span></span>
+<span id="cb31-15"><a href="aggregating.html#cb31-15"></a><span class="co">#&gt;  6 Bullock County  AL                   </span></span>
+<span id="cb31-16"><a href="aggregating.html#cb31-16"></a><span class="co">#&gt;  7 Butler County   AL                   </span></span>
+<span id="cb31-17"><a href="aggregating.html#cb31-17"></a><span class="co">#&gt;  8 Calhoun County  AL                   </span></span>
+<span id="cb31-18"><a href="aggregating.html#cb31-18"></a><span class="co">#&gt;  9 Chambers County AL                   </span></span>
+<span id="cb31-19"><a href="aggregating.html#cb31-19"></a><span class="co">#&gt; 10 Cherokee County AL                   </span></span>
+<span id="cb31-20"><a href="aggregating.html#cb31-20"></a><span class="co">#&gt; # ... with 3,133 more rows</span></span></code></pre></div>
 
 </div>
 </div>

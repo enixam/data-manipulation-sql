@@ -3,9 +3,9 @@
 
 In each of the examples, the expression aggregates over all the rows, and returns a single row.  
 
-That's what makes these expressions **aggregate expressions**. They can combine values from multiple rows, aggregating them together. These are different from the expressions earlier like `round`, `strsub` , which operate independently on the values in each row. Those are called non-aggregate
-expressions or **scalar expressions**. They return one value per row. One need to be careful about mixing aggregate and scalar operations. You can use aggregate and scalar operations together in
-an expression as in the following examples.    
+That's what makes these expressions **aggregate expressions**. They can combine values from multiple rows, aggregating them together. These are different from the arithmetic operations like `+`, `-`, `*` and `/`, or functions like `ROUND`, `STRSUB` , which operate independently on the values in each row, and return a column whose length equals that of the whole table. Those are called **non-aggregate** expressions. 
+
+One need to be careful about mixing aggregate and non-aggregate operations. You can use aggregate and non-aggregate operations together in an expression as in the following examples.    
 
 ```{sql connection=con}
 SELECT ROUND(AVG(salary), 1) AS avg_salary 
@@ -17,55 +17,72 @@ SELECT SUM(salary * 0.5) AS avg_half_salary
 FROM employees 
 ```
 
-Unfortunately, there are also invalid mix of aggregation expression and scalar expressions.
+Unfortunately, there are also invalid mix of aggregation expression and non-aggreagate expressions. Suppose we want to know the difference between one's salary and the highest salary in the table
 
 ```{sql connection=con, eval = FALSE}
 -- not run
-SELECT salary - AVG(salary) 
+SELECT salary - max(salary) 
 FROM employees
 ```
 
-This query will throw an error message like **"employees.salary must appear in the GROUP BY clause or be used in an aggregate function"**. For R users, this may be a bit confusing, since similar dplyr expresisons work just fine:  
+This query will throw an error message like **"employees.salary must appear in the GROUP BY clause or be used in an aggregate function"**. For R users, this may be a bit confusing, since similar dplyr expressions work just fine:  
 
 ```{r}
 library(dplyr)
 employees <- readr::read_csv("data/employees.csv")
 
 employees %>%
-  mutate(difference = salary - mean(salary))
+  mutate(difference = salary - max(salary))
 ```
+
+This is because the R language recycles the one element scalar `mean(salary)` to match its length to `salary`. SQL, on the other hand, does not know how to subtract one row from multiple rows. 
 
 For now, the workaround is to use **subqueries**. Later we will see another solution using window functions in Chapter \@ref(window-functions).
 
 
 ```{sql connection=con}
 SELECT salary - 
-  (SELECT AVG(salary) FROM employees)
+  (SELECT MAX(salary) FROM employees)
   AS difference
 FROM employees
 ```
 
 
-
-
-
-Also, you cannot use both scalar and aggregate expressions in `SELECT`. For example, the following query has two items in the `SELECT` list. 
+Also, you cannot select aggregating expressions and regular columns in parallel. For example, the following query has two items in the `SELECT` list. 
 
 ```{sql connection=con, eval = FALSE}
 -- not run
-SELECT first_name, sum(salary) FROM employees
+SELECT first_name, max(salary) FROM employees
 ```
 
-The first is just the column reference first name, that evaluates as a scalar expression. It returns a value for each row in the `employees` table. The second is the aggregate expression, sum salary. That returns just one row that aggregates all the salary values in the `employees` table.
+The first is just the column reference first name, that evaluates as a scalar expression. It returns a value for each row in the `employees` table. The second is the aggregate expression, max salary. That returns one row that aggregates all the salary values in the `employees` table.
 
 
-  
+
+
+### rowwise aggregating
+
+There are functions in SQL that are designed to perform computations per row, instead of across rows. For them, we need not to worry about the unmatched length problem. 
+
+For example, there are non-aggregate `GREATEST()` for `MAX()`, and `LEAST` for `MIN()`
 
 ```{sql connection=con}
-SELECT red, green, blue, GREATEST(red, green, blue) FROM crayons
+-- what is the dominant and least-used color for each crayon? 
+SELECT 
+  red, green, blue, GREATEST(red, green, blue), LEAST(red, green, blue)
+FROM crayons
 ```
 
 
+This is much like the rowwise mechanism introduced since dplyr 1.0 
+
+```{r}
+crayon <- readr::read_csv("data/crayons.csv")
+crayon %>%
+  rowwise() %>% 
+  mutate(dominant = max(c(red, green, blue)),
+         `least used` = min(c(red, green, blue)))
+```
 
 
 
@@ -93,22 +110,21 @@ SELECT list_price < 10, COUNT(*) FROM games GROUP BY list_price < 10;
 ```
 
 ```{sql connection=con}
-SELECT list_price > 20 AS over_20, max_players, COUNT(*)
+SELECT (list_price) > 20 AS over_20, max_players, COUNT(*)
 FROM games
 GROUP BY over_20, max_players;
 ```
-
-
-
-
-
- 
-
 ```{sql connection=con}
-SELECT shop, SUM((price IS  NULL)::int), COUNT(*) 
-FROM inventory
-GROUP BY shop
+SELECT * FROM games
 ```
+
+
+
+One of the major limitations of the `GROUP BY` clause is that it left you few choices in the `SELECT` list: **either an aggregate expression or columns that appear in `GROUP BY`**  
+
+
+## Common aggregating functions
+
 
 
 ## NULL values in aggregation  
