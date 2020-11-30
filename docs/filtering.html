@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Filtering | Data Manipulation with SQL</title>
+  <title>Chapter 2 Filtering | SQL cookbook</title>
   <meta name="description" content="This book introduces essential SQL commands for data maninpulation, as well as presenting equivalent dplyr code for complex queries." />
-  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Filtering | Data Manipulation with SQL" />
+  <meta property="og:title" content="Chapter 2 Filtering | SQL cookbook" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="enixam/data-manipulation-sql" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Filtering | Data Manipulation with SQL" />
+  <meta name="twitter:title" content="Chapter 2 Filtering | SQL cookbook" />
   
   <meta name="twitter:description" content="This book introduces essential SQL commands for data maninpulation, as well as presenting equivalent dplyr code for complex queries." />
   
@@ -24,15 +24,16 @@
 <meta name="author" content="Qiushi Yan" />
 
 
-<meta name="date" content="2020-07-30" />
+<meta name="date" content="2020-11-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="write-simple-queries.html"/>
+<link rel="prev" href="sql-basics.html"/>
 <link rel="next" href="aggregating.html"/>
+<script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,22 +51,22 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -85,7 +86,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -118,7 +119,7 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<link rel="stylesheet" href="css\style.css" type="text/css" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
 
 <body>
@@ -135,51 +136,102 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="sql-basics.html"><a href="sql-basics.html"><i class="fa fa-check"></i><b>1</b> SQL basics</a><ul>
-<li class="chapter" data-level="1.1" data-path="sql-basics.html"><a href="sql-basics.html#ddl"><i class="fa fa-check"></i><b>1.1</b> DDL</a><ul>
-<li class="chapter" data-level="1.1.1" data-path="sql-basics.html"><a href="sql-basics.html#creating-tables"><i class="fa fa-check"></i><b>1.1.1</b> Creating tables</a></li>
-<li class="chapter" data-level="1.1.2" data-path="sql-basics.html"><a href="sql-basics.html#deleting-tables"><i class="fa fa-check"></i><b>1.1.2</b> Deleting tables</a></li>
+<li class="chapter" data-level="1" data-path="sql-basics.html"><a href="sql-basics.html"><i class="fa fa-check"></i><b>1</b> SQL Basics</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="sql-basics.html"><a href="sql-basics.html#data-types"><i class="fa fa-check"></i><b>1.1</b> Data Types</a></li>
+<li class="chapter" data-level="1.2" data-path="sql-basics.html"><a href="sql-basics.html#ddl"><i class="fa fa-check"></i><b>1.2</b> DDL</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="sql-basics.html"><a href="sql-basics.html#creating-tables"><i class="fa fa-check"></i><b>1.2.1</b> Creating Tables</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path="sql-basics.html"><a href="sql-basics.html#dml"><i class="fa fa-check"></i><b>1.2</b> DML</a><ul>
-<li class="chapter" data-level="1.2.1" data-path="sql-basics.html"><a href="sql-basics.html#inserting-rows"><i class="fa fa-check"></i><b>1.2.1</b> Inserting rows</a></li>
+<li class="chapter" data-level="1.3" data-path="sql-basics.html"><a href="sql-basics.html#dropping-and-updating-tables"><i class="fa fa-check"></i><b>1.3</b> Dropping and Updating Tables</a></li>
+<li class="chapter" data-level="1.4" data-path="sql-basics.html"><a href="sql-basics.html#dml"><i class="fa fa-check"></i><b>1.4</b> DML</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="sql-basics.html"><a href="sql-basics.html#inserting-rows"><i class="fa fa-check"></i><b>1.4.1</b> Inserting Rows</a></li>
 </ul></li>
-<li class="chapter" data-level="1.3" data-path="sql-basics.html"><a href="sql-basics.html#creating-views"><i class="fa fa-check"></i><b>1.3</b> Creating views</a><ul>
-<li class="chapter" data-level="1.3.1" data-path="sql-basics.html"><a href="sql-basics.html#deleting-views"><i class="fa fa-check"></i><b>1.3.1</b> Deleting views</a></li>
-<li class="chapter" data-level="1.3.2" data-path="sql-basics.html"><a href="sql-basics.html#updating-views"><i class="fa fa-check"></i><b>1.3.2</b> Updating views</a></li>
+<li class="chapter" data-level="1.5" data-path="sql-basics.html"><a href="sql-basics.html#creating-views"><i class="fa fa-check"></i><b>1.5</b> Creating Views</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="sql-basics.html"><a href="sql-basics.html#deleting-views"><i class="fa fa-check"></i><b>1.5.1</b> Deleting Views</a></li>
+<li class="chapter" data-level="1.5.2" data-path="sql-basics.html"><a href="sql-basics.html#updating-views"><i class="fa fa-check"></i><b>1.5.2</b> Updating Views</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="sql-basics.html"><a href="sql-basics.html#queries"><i class="fa fa-check"></i><b>1.6</b> Queries</a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path="sql-basics.html"><a href="sql-basics.html#order-of-execution"><i class="fa fa-check"></i><b>1.6.1</b> Order of Execution</a></li>
+<li class="chapter" data-level="1.6.2" data-path="sql-basics.html"><a href="sql-basics.html#the-with-clause"><i class="fa fa-check"></i><b>1.6.2</b> The <code>WITH</code> Clause</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="write-simple-queries.html"><a href="write-simple-queries.html"><i class="fa fa-check"></i><b>2</b> Write simple queries</a><ul>
-<li class="chapter" data-level="2.1" data-path="write-simple-queries.html"><a href="write-simple-queries.html#the-with-clause"><i class="fa fa-check"></i><b>2.1</b> The <code>WITH</code> clause</a></li>
+<li class="chapter" data-level="2" data-path="filtering.html"><a href="filtering.html"><i class="fa fa-check"></i><b>2</b> Filtering</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="filtering.html"><a href="filtering.html#operators"><i class="fa fa-check"></i><b>2.1</b> Operators</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="filtering.html"><a href="filtering.html#comparison-operators"><i class="fa fa-check"></i><b>2.1.1</b> Comparison Operators</a></li>
+<li class="chapter" data-level="2.1.2" data-path="filtering.html"><a href="filtering.html#logical-operators"><i class="fa fa-check"></i><b>2.1.2</b> Logical Operators</a></li>
+<li class="chapter" data-level="2.1.3" data-path="filtering.html"><a href="filtering.html#other-relational-operators"><i class="fa fa-check"></i><b>2.1.3</b> Other Relational Operators</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="filtering.html"><a href="filtering.html"><i class="fa fa-check"></i><b>3</b> Filtering</a><ul>
-<li class="chapter" data-level="3.1" data-path="filtering.html"><a href="filtering.html#the-where-clause"><i class="fa fa-check"></i><b>3.1</b> The <code>WHERE</code> clause</a></li>
-<li class="chapter" data-level="3.2" data-path="filtering.html"><a href="filtering.html#operators"><i class="fa fa-check"></i><b>3.2</b> Operators</a><ul>
-<li class="chapter" data-level="3.2.1" data-path="filtering.html"><a href="filtering.html#comparison-operators"><i class="fa fa-check"></i><b>3.2.1</b> Comparison operators</a></li>
-<li class="chapter" data-level="3.2.2" data-path="filtering.html"><a href="filtering.html#logical-operators"><i class="fa fa-check"></i><b>3.2.2</b> Logical operators</a></li>
-<li class="chapter" data-level="3.2.3" data-path="filtering.html"><a href="filtering.html#other-relational-operators"><i class="fa fa-check"></i><b>3.2.3</b> Other relational operators</a></li>
+<li class="chapter" data-level="2.2" data-path="filtering.html"><a href="filtering.html#missing-values"><i class="fa fa-check"></i><b>2.2</b> Missing Values</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="filtering.html"><a href="filtering.html#conditional-functions"><i class="fa fa-check"></i><b>2.2.1</b> Conditional Functions</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="filtering.html"><a href="filtering.html#missing-values"><i class="fa fa-check"></i><b>3.3</b> Missing values</a><ul>
-<li class="chapter" data-level="3.3.1" data-path="filtering.html"><a href="filtering.html#conditional-functions"><i class="fa fa-check"></i><b>3.3.1</b> Conditional functions</a></li>
+<li class="chapter" data-level="2.3" data-path="filtering.html"><a href="filtering.html#the-having-clause"><i class="fa fa-check"></i><b>2.3</b> The <code>HAVING</code> Clause</a></li>
+<li class="chapter" data-level="2.4" data-path="filtering.html"><a href="filtering.html#filtering-by-aggregation"><i class="fa fa-check"></i><b>2.4</b> Filtering by aggregation</a></li>
 </ul></li>
-<li class="chapter" data-level="3.4" data-path="filtering.html"><a href="filtering.html#the-having-clause"><i class="fa fa-check"></i><b>3.4</b> The <code>HAVING</code> clause</a></li>
+<li class="chapter" data-level="3" data-path="aggregating.html"><a href="aggregating.html"><i class="fa fa-check"></i><b>3</b> Aggregating</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="aggregating.html"><a href="aggregating.html#aggregate-functions"><i class="fa fa-check"></i><b>3.1</b> Aggregate Functions</a></li>
+<li class="chapter" data-level="3.2" data-path="aggregating.html"><a href="aggregating.html#rowwise-aggregation"><i class="fa fa-check"></i><b>3.2</b> Rowwise Aggregation</a></li>
+<li class="chapter" data-level="3.3" data-path="aggregating.html"><a href="aggregating.html#the-group-by-clause"><i class="fa fa-check"></i><b>3.3</b> The <code>GROUP BY</code> Clause</a></li>
+<li class="chapter" data-level="3.4" data-path="aggregating.html"><a href="aggregating.html#common-aggregating-functions"><i class="fa fa-check"></i><b>3.4</b> Common Aggregating Functions</a></li>
+<li class="chapter" data-level="3.5" data-path="aggregating.html"><a href="aggregating.html#null-in-aggregation"><i class="fa fa-check"></i><b>3.5</b> <code>NULL</code> in Aggregation</a></li>
+<li class="chapter" data-level="3.6" data-path="aggregating.html"><a href="aggregating.html#find-distinct-combinations"><i class="fa fa-check"></i><b>3.6</b> Find distinct combinations</a></li>
+<li class="chapter" data-level="3.7" data-path="aggregating.html"><a href="aggregating.html#percentages"><i class="fa fa-check"></i><b>3.7</b> Percentages</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="aggregating.html"><a href="aggregating.html"><i class="fa fa-check"></i><b>4</b> Aggregating</a><ul>
-<li class="chapter" data-level="4.0.1" data-path="aggregating.html"><a href="aggregating.html#rowwise-aggregating"><i class="fa fa-check"></i><b>4.0.1</b> rowwise aggregating</a></li>
-<li class="chapter" data-level="4.1" data-path="aggregating.html"><a href="aggregating.html#the-group-by-clause."><i class="fa fa-check"></i><b>4.1</b> The <code>GROUP BY</code> clause.</a></li>
-<li class="chapter" data-level="4.2" data-path="aggregating.html"><a href="aggregating.html#common-aggregating-functions"><i class="fa fa-check"></i><b>4.2</b> Common aggregating functions</a></li>
-<li class="chapter" data-level="4.3" data-path="aggregating.html"><a href="aggregating.html#null-values-in-aggregation"><i class="fa fa-check"></i><b>4.3</b> NULL values in aggregation</a></li>
-<li class="chapter" data-level="4.4" data-path="aggregating.html"><a href="aggregating.html#using-group-by-in-non-aggregating-scenarios"><i class="fa fa-check"></i><b>4.4</b> Using <code>GROUP BY</code> in non-aggregating scenarios</a></li>
+<li class="chapter" data-level="4" data-path="window-functions.html"><a href="window-functions.html"><i class="fa fa-check"></i><b>4</b> Window Functions</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="window-functions.html"><a href="window-functions.html#create-rankings"><i class="fa fa-check"></i><b>4.1</b> Create Rankings</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="window-functions.html"><a href="window-functions.html"><i class="fa fa-check"></i><b>5</b> Window functions</a><ul>
-<li class="chapter" data-level="5.1" data-path="window-functions.html"><a href="window-functions.html#statisticcs-with-window-functions"><i class="fa fa-check"></i><b>5.1</b> Statisticcs with window functions</a></li>
+<li class="chapter" data-level="5" data-path="joining.html"><a href="joining.html"><i class="fa fa-check"></i><b>5</b> Joining</a></li>
+<li class="chapter" data-level="6" data-path="complex-data-types.html"><a href="complex-data-types.html"><i class="fa fa-check"></i><b>6</b> Complex Data Types</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="complex-data-types.html"><a href="complex-data-types.html#converting-data-types"><i class="fa fa-check"></i><b>6.1</b> Converting Data Types</a></li>
+<li class="chapter" data-level="6.2" data-path="complex-data-types.html"><a href="complex-data-types.html#date-and-time"><i class="fa fa-check"></i><b>6.2</b> Date and Time</a></li>
+<li class="chapter" data-level="6.3" data-path="complex-data-types.html"><a href="complex-data-types.html#array"><i class="fa fa-check"></i><b>6.3</b> Array</a></li>
+<li class="chapter" data-level="6.4" data-path="complex-data-types.html"><a href="complex-data-types.html#json"><i class="fa fa-check"></i><b>6.4</b> JSON</a></li>
+<li class="chapter" data-level="6.5" data-path="complex-data-types.html"><a href="complex-data-types.html#text"><i class="fa fa-check"></i><b>6.5</b> Text</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="joining.html"><a href="joining.html"><i class="fa fa-check"></i><b>6</b> Joining</a></li>
-<li class="chapter" data-level="7" data-path="data-types.html"><a href="data-types.html"><i class="fa fa-check"></i><b>7</b> Data types</a><ul>
-<li class="chapter" data-level="7.1" data-path="data-types.html"><a href="data-types.html#converting-data-types"><i class="fa fa-check"></i><b>7.1</b> Converting data types</a></li>
-<li class="chapter" data-level="7.2" data-path="data-types.html"><a href="data-types.html#date-and-time"><i class="fa fa-check"></i><b>7.2</b> Date and time</a></li>
+<li class="chapter" data-level="7" data-path="miscellaneous-query-techniques.html"><a href="miscellaneous-query-techniques.html"><i class="fa fa-check"></i><b>7</b> Miscellaneous query techniques</a></li>
+<li class="chapter" data-level="8" data-path="subqueries.html"><a href="subqueries.html"><i class="fa fa-check"></i><b>8</b> Subqueries</a>
+<ul>
+<li class="chapter" data-level="8.0.1" data-path="subqueries.html"><a href="subqueries.html#create-derived-tables"><i class="fa fa-check"></i><b>8.0.1</b> Create derived tables</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="solutions-to-sql-puzzles.html"><a href="solutions-to-sql-puzzles.html"><i class="fa fa-check"></i><b>8</b> Solutions to SQL puzzles</a></li>
+<li class="chapter" data-level="9" data-path="solutions-to-sql-puzzles.html"><a href="solutions-to-sql-puzzles.html"><i class="fa fa-check"></i><b>9</b> Solutions to SQL puzzles</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="traditional-relational-database-management-systems.html"><a href="traditional-relational-database-management-systems.html"><i class="fa fa-check"></i><b>A</b> Traditional Relational Database Management Systems</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="traditional-relational-database-management-systems.html"><a href="traditional-relational-database-management-systems.html#normalization-and-denormaliztion"><i class="fa fa-check"></i><b>A.1</b> Normalization and Denormaliztion</a></li>
+<li class="chapter" data-level="A.2" data-path="traditional-relational-database-management-systems.html"><a href="traditional-relational-database-management-systems.html#dattabase-transactions"><i class="fa fa-check"></i><b>A.2</b> Dattabase transactions</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html"><i class="fa fa-check"></i><b>B</b> Big Data, Databases and SQL</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#strength-and-limitaions-of-rdbms"><i class="fa fa-check"></i><b>B.1</b> Strength and Limitaions of RDBMS</a>
+<ul>
+<li class="chapter" data-level="B.1.1" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#strength-of-rdbms"><i class="fa fa-check"></i><b>B.1.1</b> Strength of RDBMS</a></li>
+<li class="chapter" data-level="B.1.2" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#limitations-of-rdbms-in-the-age-of-big-data"><i class="fa fa-check"></i><b>B.1.2</b> Limitations of RDBMS in the Age of Big Data</a></li>
+</ul></li>
+<li class="chapter" data-level="B.2" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#big-databases-big-data-stores-and-sql"><i class="fa fa-check"></i><b>B.2</b> Big Databases, Big Data Stores, and SQL</a>
+<ul>
+<li class="chapter" data-level="B.2.1" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#big-data-analytic-databases-data-warehouses"><i class="fa fa-check"></i><b>B.2.1</b> Big Data Analytic Databases (Data Warehouses)</a></li>
+<li class="chapter" data-level="B.2.2" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#nosql-databases"><i class="fa fa-check"></i><b>B.2.2</b> NoSQL Databases</a></li>
+<li class="chapter" data-level="B.2.3" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#non-transactional-databases"><i class="fa fa-check"></i><b>B.2.3</b> Non-transactional databases</a></li>
+<li class="chapter" data-level="B.2.4" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#big-data-acid-compliant-rdbmss"><i class="fa fa-check"></i><b>B.2.4</b> Big Data ACID-Compliant RDBMSs</a></li>
+<li class="chapter" data-level="B.2.5" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#search-engines"><i class="fa fa-check"></i><b>B.2.5</b> Search engines</a></li>
+</ul></li>
+<li class="chapter" data-level="B.3" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#sql-for-big-data-analysis"><i class="fa fa-check"></i><b>B.3</b> SQL for Big Data Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="using-apache-hive-and-impala.html"><a href="using-apache-hive-and-impala.html"><i class="fa fa-check"></i><b>C</b> Using Apache Hive and Impala</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="using-apache-hive-and-impala.html"><a href="using-apache-hive-and-impala.html#apache-hive"><i class="fa fa-check"></i><b>C.1</b> Apache Hive</a></li>
+<li class="chapter" data-level="C.2" data-path="using-apache-hive-and-impala.html"><a href="using-apache-hive-and-impala.html#apache-impala"><i class="fa fa-check"></i><b>C.2</b> Apache Impala</a></li>
+</ul></li>
 <li class="divider"></li>
 <li>
   <a href="https://github.com/rstudio/bookdown" target="blank">Written with bookdown</a>
@@ -194,7 +246,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Manipulation with SQL</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">SQL cookbook</a>
           </h1>
         </div>
 
@@ -202,21 +254,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="filtering" class="section level1">
-<h1><span class="header-section-number">Chapter 3</span> Filtering</h1>
-<p>Filtering means subset your data based on some conditions.</p>
-<div id="the-where-clause" class="section level2">
-<h2><span class="header-section-number">3.1</span> The <code>WHERE</code> clause</h2>
-</div>
-<div id="operators" class="section level2">
-<h2><span class="header-section-number">3.2</span> Operators</h2>
+<div id="filtering" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Filtering</h1>
+<p>Filtering means subset your data based on some conditions. In SQL, filtering is based on the <code>WHERE</code> clause</p>
+<div id="operators" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Operators</h2>
 <p>Operators play a central role in filtering data, they provide a boolean value <code>true / false</code> based on an expression, by which the <code>WHERE</code> clause use to judge whether one row should be kept or excluded. For example, <code>=</code> is an operator that checks equality.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="filtering.html#cb5-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(geo_name, area_water)) </span>
-<span id="cb5-2"><a href="filtering.html#cb5-2"></a><span class="kw">FROM</span> us_counties_2010</span>
-<span id="cb5-3"><a href="filtering.html#cb5-3"></a><span class="kw">GROUP</span> <span class="kw">BY</span> region</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="filtering.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="kw">DISTINCT</span>(geo_name, area_water)) </span>
+<span id="cb6-2"><a href="filtering.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> us_counties_2010</span>
+<span id="cb6-3"><a href="filtering.html#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> region</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-1">Table 3.1: </span>4 records</caption>
+<caption><span id="tab:unnamed-chunk-1">Table 2.1: </span>4 records</caption>
 <thead>
 <tr class="header">
 <th align="right">count</th>
@@ -238,25 +287,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tbody>
 </table>
 </div>
-<div id="comparison-operators" class="section level3">
-<h3><span class="header-section-number">3.2.1</span> Comparison operators</h3>
+<div id="comparison-operators" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Comparison Operators</h3>
 </div>
-<div id="logical-operators" class="section level3">
-<h3><span class="header-section-number">3.2.2</span> Logical operators</h3>
+<div id="logical-operators" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Logical Operators</h3>
 <p>Logical operators enable users to combine multiple boolean expressions.</p>
 <ul>
 <li><p>Binary operators <code>AND</code> and <code>OR</code></p></li>
 <li><p>Unary operator <code>NOT</code></p></li>
 </ul>
 <p>Be mindful of order of operators: <code>NOT</code> (first), <code>AND</code> (second), <code>OR</code> (third). One workaround is to use parenthesis <code>()</code> to indicate order of operations, this makes queries more readable.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="filtering.html#cb6-1"></a><span class="kw">SELECT</span> <span class="fu">CAST</span> (region <span class="kw">as</span> <span class="dt">varchar</span>(<span class="dv">5</span>)),</span>
-<span id="cb6-2"><a href="filtering.html#cb6-2"></a>       <span class="fu">COALESCE</span>(summary_level, <span class="st">&#39;0&#39;</span>),</span>
-<span id="cb6-3"><a href="filtering.html#cb6-3"></a>       <span class="fu">avg</span>(p0010001) <span class="kw">AS</span> pop</span>
-<span id="cb6-4"><a href="filtering.html#cb6-4"></a><span class="kw">FROM</span> us_counties_2010 </span>
-<span id="cb6-5"><a href="filtering.html#cb6-5"></a><span class="kw">GROUP</span> <span class="kw">BY</span> (region, summary_level)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="filtering.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">CAST</span> (region <span class="kw">as</span> <span class="dt">varchar</span>(<span class="dv">5</span>)),</span>
+<span id="cb7-2"><a href="filtering.html#cb7-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COALESCE</span>(summary_level, <span class="st">&#39;0&#39;</span>),</span>
+<span id="cb7-3"><a href="filtering.html#cb7-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">avg</span>(p0010001) <span class="kw">AS</span> pop</span>
+<span id="cb7-4"><a href="filtering.html#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> us_counties_2010 </span>
+<span id="cb7-5"><a href="filtering.html#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> (region, summary_level)</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-2">Table 3.2: </span>4 records</caption>
+<caption><span id="tab:unnamed-chunk-2">Table 2.2: </span>4 records</caption>
 <thead>
 <tr class="header">
 <th align="left">region</th>
@@ -289,20 +338,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </table>
 </div>
 </div>
-<div id="other-relational-operators" class="section level3">
-<h3><span class="header-section-number">3.2.3</span> Other relational operators</h3>
+<div id="other-relational-operators" class="section level3" number="2.1.3">
+<h3><span class="header-section-number">2.1.3</span> Other Relational Operators</h3>
 </div>
 </div>
-<div id="missing-values" class="section level2">
-<h2><span class="header-section-number">3.3</span> Missing values</h2>
+<div id="missing-values" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Missing Values</h2>
 <p>Any rows in which the expression in the <code>WHERE</code> clause evaluate to <code>false</code> and any rows in which it evaluates to <code>NULL</code>, are filtered out excluded from the result set. <code>Knitr</code>’s SQL engine displays <code>NULL</code> as <code>NA</code> in the resulting table, but remember in databases this is actually <code>NULL</code>.</p>
 <p>How many different games in the <code>inventory</code> table are located in Aisle 3 of the Dicey shop?</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="filtering.html#cb7-1"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> game</span>
-<span id="cb7-2"><a href="filtering.html#cb7-2"></a><span class="kw">FROM</span> inventory</span>
-<span id="cb7-3"><a href="filtering.html#cb7-3"></a><span class="kw">WHERE</span> shop <span class="op">=</span> <span class="st">&#39;Dicey&#39;</span> <span class="kw">AND</span> aisle <span class="op">=</span> <span class="dv">3</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="filtering.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> game</span>
+<span id="cb8-2"><a href="filtering.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> inventory</span>
+<span id="cb8-3"><a href="filtering.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> shop <span class="op">=</span> <span class="st">&#39;Dicey&#39;</span> <span class="kw">AND</span> aisle <span class="op">=</span> <span class="dv">3</span></span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-3">Table 3.3: </span>1 records</caption>
+<caption><span id="tab:unnamed-chunk-3">Table 2.3: </span>1 records</caption>
 <thead>
 <tr class="header">
 <th align="left">game</th>
@@ -316,10 +365,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </table>
 </div>
 <p>The answer is at least 1. Since the row representing the game Clue in the shop Dicey has a missing value in the <code>aisle</code> column. You cannot rule out the possibility that this game is in Aisle 3.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="filtering.html#cb8-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> inventory <span class="kw">WHERE</span> aisle <span class="kw">IS</span> <span class="kw">NULL</span> </span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="filtering.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> inventory <span class="kw">WHERE</span> aisle <span class="kw">IS</span> <span class="kw">NULL</span> </span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-4">Table 3.4: </span>1 records</caption>
+<caption><span id="tab:unnamed-chunk-4">Table 2.4: </span>1 records</caption>
 <thead>
 <tr class="header">
 <th align="left">shop</th>
@@ -341,10 +390,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </table>
 </div>
 <p>What if you wanted to write a <code>WHERE</code> clause to filter out the office in Illinois in the <code>offices</code> table, to return the three offices that are not in Illinois. You might try to write a <code>WHERE</code> clause like <code>WHERE state_province not &lt;&gt; 'Illinois'</code>. But this returns only two rows.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="filtering.html#cb9-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> offices <span class="kw">WHERE</span> state_province <span class="op">&lt;&gt;</span> <span class="st">&#39;Illinois&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="filtering.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> offices <span class="kw">WHERE</span> state_province <span class="op">&lt;&gt;</span> <span class="st">&#39;Illinois&#39;</span></span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-5">Table 3.5: </span>2 records</caption>
+<caption><span id="tab:unnamed-chunk-5">Table 2.5: </span>2 records</caption>
 <thead>
 <tr class="header">
 <th align="left">office_id</th>
@@ -370,10 +419,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </table>
 </div>
 <p>Though row representing the Singapore office is not in the result set. That’s because the state province value in that row is null, and “null not equal to Illinois” evaluates to null. So that row is excluded from the results set</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="filtering.html#cb10-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> offices</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb11-1"><a href="filtering.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> offices</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-6">Table 3.6: </span>4 records</caption>
+<caption><span id="tab:unnamed-chunk-6">Table 2.6: </span>4 records</caption>
 <thead>
 <tr class="header">
 <th align="left">office_id</th>
@@ -412,10 +461,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>But in this case, you know from context that this <code>NULL</code> value doesn’t mean unknown, it means not applicable because Singapore does not have states or provinces. This is the type of situation where
 the <code>IS DISTINCT FROM</code> operator is useful.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb11-1"><a href="filtering.html#cb11-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> offices <span class="kw">WHERE</span> state_province <span class="kw">IS</span> <span class="kw">DISTINCT</span> <span class="kw">FROM</span> <span class="st">&#39;Illinois&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb12-1"><a href="filtering.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> offices <span class="kw">WHERE</span> state_province <span class="kw">IS</span> <span class="kw">DISTINCT</span> <span class="kw">FROM</span> <span class="st">&#39;Illinois&#39;</span></span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-7">Table 3.7: </span>3 records</caption>
+<caption><span id="tab:unnamed-chunk-7">Table 2.7: </span>3 records</caption>
 <thead>
 <tr class="header">
 <th align="left">office_id</th>
@@ -450,8 +499,8 @@ the <code>IS DISTINCT FROM</code> operator is useful.</p>
 non <code>NULL</code> values as <strong>explicitly unequal</strong>. Whenever the operand on one side is <code>NULL</code> and the operand on the other side is not <code>NULL</code>, it evaluates to <code>true</code>.</p>
 <p>There is also a version of this operator that negates the result of the comparison, <code>IS NOT DISTINCT FROM</code>. This is like the equals operator, except when it compares a <code>NULL</code> value with a non-null value, it returns <code>false</code> instead of <code>NULL</code>. And when it compares two <code>NULL</code> values
 it returns <code>true</code> instead of <code>NULL</code>. This shorthand notation for <code>IS NOT DISTINCT FROM</code>, <code>&lt;=&gt;</code> is supported by Hive, Impala, and MySQL.</p>
-<div id="conditional-functions" class="section level3">
-<h3><span class="header-section-number">3.3.1</span> Conditional functions</h3>
+<div id="conditional-functions" class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Conditional Functions</h3>
 <ul>
 <li><p><code>if</code></p></li>
 <li><p><code>CASE</code></p></li>
@@ -459,12 +508,12 @@ it returns <code>true</code> instead of <code>NULL</code>. This shorthand notati
 <li><p><code>ifnull</code></p></li>
 <li><p><code>coalesce</code></p></li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb12-1"><a href="filtering.html#cb12-1"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> color </span>
-<span id="cb12-2"><a href="filtering.html#cb12-2"></a><span class="kw">FROM</span> crayons </span>
-<span id="cb12-3"><a href="filtering.html#cb12-3"></a><span class="kw">WHERE</span> red <span class="op">=</span> <span class="dv">205</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb13-1"><a href="filtering.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> color </span>
+<span id="cb13-2"><a href="filtering.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> crayons </span>
+<span id="cb13-3"><a href="filtering.html#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> red <span class="op">=</span> <span class="dv">205</span></span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-8">Table 3.8: </span>4 records</caption>
+<caption><span id="tab:unnamed-chunk-8">Table 2.8: </span>4 records</caption>
 <thead>
 <tr class="header">
 <th align="left">color</th>
@@ -488,18 +537,18 @@ it returns <code>true</code> instead of <code>NULL</code>. This shorthand notati
 </div>
 </div>
 </div>
-<div id="the-having-clause" class="section level2">
-<h2><span class="header-section-number">3.4</span> The <code>HAVING</code> clause</h2>
+<div id="the-having-clause" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> The <code>HAVING</code> Clause</h2>
 <p>The <code>WHERE</code> clause is used before <code>GROUP BY</code> , because it makes more sense. The filter specified in the <code>WHERE</code> clause is used before grouping. After grouping, you can have a <code>HAVING</code> clause, which is similar to <code>WHERE</code> , except you can filter by aggregate values as well. In other words, the <code>WHERE</code> clause is used to place conditions on columns, while the <code>HAVING</code> clause is used to place conditions on groups.</p>
 <p>Often you’ll want to include the aggregate expression that you use in the <code>HAVING</code> clause in the <code>SELECT</code> list as well. So you can see the values in the column you filtered by. In this example, the query filters by sum of price times quantity. It’s good to see those sum of price times quantity values
 for the rows that are included in the result set. So some of price times quantity is also used in the <code>SELECT</code> list.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb13-1"><a href="filtering.html#cb13-1"></a><span class="kw">SELECT</span> shop, <span class="fu">sum</span>(qty <span class="op">*</span> price)</span>
-<span id="cb13-2"><a href="filtering.html#cb13-2"></a><span class="kw">FROM</span> inventory</span>
-<span id="cb13-3"><a href="filtering.html#cb13-3"></a><span class="kw">GROUP</span> <span class="kw">BY</span> shop</span>
-<span id="cb13-4"><a href="filtering.html#cb13-4"></a><span class="kw">HAVING</span> <span class="fu">sum</span>(qty <span class="op">*</span> price) <span class="op">&gt;</span> <span class="dv">300</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb14-1"><a href="filtering.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> shop, <span class="fu">sum</span>(qty <span class="op">*</span> price)</span>
+<span id="cb14-2"><a href="filtering.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> inventory</span>
+<span id="cb14-3"><a href="filtering.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> shop</span>
+<span id="cb14-4"><a href="filtering.html#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">HAVING</span> <span class="fu">sum</span>(qty <span class="op">*</span> price) <span class="op">&gt;</span> <span class="dv">300</span></span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-9">Table 3.9: </span>1 records</caption>
+<caption><span id="tab:unnamed-chunk-9">Table 2.9: </span>1 records</caption>
 <thead>
 <tr class="header">
 <th align="left">shop</th>
@@ -516,12 +565,110 @@ for the rows that are included in the result set. So some of price times quantit
 </div>
 <p>But it’s inconvenient to have to repeat the same expression in these two different places. So some SQL engines provide a shortcut that you can use to avoid this repetition. With some SQL engines, you can specify the aggregate expression in the <code>SELECT</code> list, give it an alias,
 and then use that alias in the <code>HAVING</code> clause. That way you do not need to repeat the aggregate expression twice. This shortcut works with Impala, Hive, and MySQL, but not with PostgreSQL and some other SQL engines. If you’re using a different SQL engine, trying to see if it works.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb14-1"><a href="filtering.html#cb14-1"></a><span class="co">-- this does not work in PostgreSQL </span></span>
-<span id="cb14-2"><a href="filtering.html#cb14-2"></a><span class="co">-- not run</span></span>
-<span id="cb14-3"><a href="filtering.html#cb14-3"></a><span class="kw">SELECT</span> shop, <span class="fu">sum</span>(qty <span class="op">*</span> price) <span class="kw">AS</span> total</span>
-<span id="cb14-4"><a href="filtering.html#cb14-4"></a><span class="kw">FROM</span> inventory</span>
-<span id="cb14-5"><a href="filtering.html#cb14-5"></a><span class="kw">GROUP</span> <span class="kw">BY</span> shop</span>
-<span id="cb14-6"><a href="filtering.html#cb14-6"></a><span class="kw">HAVING</span> total <span class="op">&gt;</span> <span class="dv">300</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb15-1"><a href="filtering.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- this does not work in PostgreSQL </span></span>
+<span id="cb15-2"><a href="filtering.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- not run</span></span>
+<span id="cb15-3"><a href="filtering.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> shop, <span class="fu">sum</span>(qty <span class="op">*</span> price) <span class="kw">AS</span> total</span>
+<span id="cb15-4"><a href="filtering.html#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> inventory</span>
+<span id="cb15-5"><a href="filtering.html#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> shop</span>
+<span id="cb15-6"><a href="filtering.html#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="kw">HAVING</span> total <span class="op">&gt;</span> <span class="dv">300</span></span></code></pre></div>
+</div>
+<div id="filtering-by-aggregation" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Filtering by aggregation</h2>
+<p>We want to filter records based on a condition using aggregating values, e.g., find all teachers whose salary is lower than the average salary. This is when an aggregated subquery comes in handy. An aggregated subquery is an subquery in the <code>FROM</code> clause, alongside with the source table. First the subquery in <code>FROM</code> is run, producing a result (which we can think of as a table named <code>t</code>, and this alias is required). This attribute is added to every row of table <code>teachers</code>). It is this ‘extended’ table that is evaluated in the <code>WHERE</code> clause; that is why the condition there refers to attribute <code>a</code> and selecting it. This is like R’s recycling rule in data frames: when you create a scalar column, the scalar is repeated to match the length of other columns.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb16-1"><a href="filtering.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> first_name, last_name, salary, a</span>
+<span id="cb16-2"><a href="filtering.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> teachers, </span>
+<span id="cb16-3"><a href="filtering.html#cb16-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">SELECT</span> <span class="fu">avg</span>(salary) <span class="kw">as</span> a <span class="kw">FROM</span> teachers) <span class="kw">as</span> t</span>
+<span id="cb16-4"><a href="filtering.html#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> salary <span class="op">&lt;=</span>a</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-11">Table 2.10: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="left">first_name</th>
+<th align="left">last_name</th>
+<th align="right">salary</th>
+<th align="right">a</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Janet</td>
+<td align="left">Smith</td>
+<td align="right">36200</td>
+<td align="right">43817</td>
+</tr>
+<tr class="even">
+<td align="left">Samuel</td>
+<td align="left">Cole</td>
+<td align="right">43500</td>
+<td align="right">43817</td>
+</tr>
+<tr class="odd">
+<td align="left">Samantha</td>
+<td align="left">Bush</td>
+<td align="right">36200</td>
+<td align="right">43817</td>
+</tr>
+<tr class="even">
+<td align="left">Betty</td>
+<td align="left">Diaz</td>
+<td align="right">43500</td>
+<td align="right">43817</td>
+</tr>
+<tr class="odd">
+<td align="left">Kathleen</td>
+<td align="left">Roush</td>
+<td align="right">38500</td>
+<td align="right">43817</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Another way: use subqueries in the <code>WHERE</code> clause</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb17-1"><a href="filtering.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> first_name, last_name, salary</span>
+<span id="cb17-2"><a href="filtering.html#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> teachers</span>
+<span id="cb17-3"><a href="filtering.html#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> salary <span class="op">&lt;=</span> (</span>
+<span id="cb17-4"><a href="filtering.html#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> <span class="fu">avg</span>(salary) <span class="kw">FROM</span> teachers</span>
+<span id="cb17-5"><a href="filtering.html#cb17-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-12">Table 2.11: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="left">first_name</th>
+<th align="left">last_name</th>
+<th align="right">salary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Janet</td>
+<td align="left">Smith</td>
+<td align="right">36200</td>
+</tr>
+<tr class="even">
+<td align="left">Samuel</td>
+<td align="left">Cole</td>
+<td align="right">43500</td>
+</tr>
+<tr class="odd">
+<td align="left">Samantha</td>
+<td align="left">Bush</td>
+<td align="right">36200</td>
+</tr>
+<tr class="even">
+<td align="left">Betty</td>
+<td align="left">Diaz</td>
+<td align="right">43500</td>
+</tr>
+<tr class="odd">
+<td align="left">Kathleen</td>
+<td align="left">Roush</td>
+<td align="right">38500</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 </div>
 </div>
@@ -530,7 +677,7 @@ and then use that alias in the <code>HAVING</code> clause. That way you do not n
           </div>
         </div>
       </div>
-<a href="write-simple-queries.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="sql-basics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="aggregating.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

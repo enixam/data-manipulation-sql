@@ -1,6 +1,8 @@
 
 
-# SQL basics
+# SQL Basics
+
+## Data Types
 
 
 ## DDL
@@ -14,7 +16,8 @@
 
 - `RENAME`: rename an objects
 
-### Creating tables 
+
+### Creating Tables 
 
 ```sql
 CREATE TABLE {table_name} (
@@ -45,8 +48,16 @@ The available constraints in SQL are:
 
 
 
-### Deleting tables 
+## Dropping and Updating Tables 
 
+`DROP TABLE <name>` is used to delete a table. What is often done is updating an old table. This requires dropping the old table if it exists, and create a new one.  
+
+```sql
+DROP TABLE IF EXISTS <name>;
+CREATE TABLE <name> as ...
+```
+
+Note the semicolon behind `name`. 
 
 
 
@@ -61,18 +72,51 @@ The available constraints in SQL are:
 
 Some would argue that `SELECT` should fall into the DML category. However, I think it is to our best advantage to make `SELECT` a standalone type of statements, DQL (database query language). Later chapters of this document is really focused on syntax and functions that can make the most of DQL. 
 
-### Inserting rows
+### Inserting Rows
 
 ```sql
 INSERT INTO table_name(column1, column2 , column3,..) 
-VALUES(value1, value2, value3..);
+VALUES
+  (value1, value2, value3, ...),
+  (value1, value2, value3, ...),
+  ...;
 ```
 
 
 
 
-## Creating views 
+## Creating Views 
 
-### Deleting views
+### Deleting Views
 
-### Updating views
+### Updating Views
+
+## Queries 
+
+Queries or DQL in SQL starts with `SELECT`
+
+
+
+
+### Order of Execution
+
+https://blog.jooq.org/2016/03/17/10-easy-steps-to-a-complete-understanding-of-sql/
+
+
+
+### The `WITH` Clause
+
+https://www.geeksforgeeks.org/sql-with-clause/  
+
+```{sql connection=con, eval = FALSE}
+WITH inventory_subset AS (
+  SELECT * FROM inventory WHERE shop != 'Dicey'
+)
+SELECT * FROM inventory_subset
+```
+
+
+
+
+
+Fundamentally, the definition of a view is saved in the database and can be reused by any query, whereas a `WITH` clause (or Common Table Expression, or CTE) is tied to one specific query and can only be reused by copying. Otherwise, they will be substantially the same

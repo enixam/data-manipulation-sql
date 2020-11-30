@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 Window Functions | SQL cookbook</title>
+  <title>C Using Apache Hive and Impala | SQL cookbook</title>
   <meta name="description" content="This book introduces essential SQL commands for data maninpulation, as well as presenting equivalent dplyr code for complex queries." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 Window Functions | SQL cookbook" />
+  <meta property="og:title" content="C Using Apache Hive and Impala | SQL cookbook" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="enixam/data-manipulation-sql" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 Window Functions | SQL cookbook" />
+  <meta name="twitter:title" content="C Using Apache Hive and Impala | SQL cookbook" />
   
   <meta name="twitter:description" content="This book introduces essential SQL commands for data maninpulation, as well as presenting equivalent dplyr code for complex queries." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="aggregating.html"/>
-<link rel="next" href="joining.html"/>
+<link rel="prev" href="big-data-databases-and-sql.html"/>
+
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -254,445 +254,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="window-functions" class="section level1" number="4">
-<h1><span class="header-section-number">Chapter 4</span> Window Functions</h1>
-<p><a href="https://www.postgresql.org/docs/current/functions-window.html" class="uri">https://www.postgresql.org/docs/current/functions-window.html</a></p>
-<p>A window function performs a calculation across a set of table rows that are somehow related to the current row. This is comparable to the type of calculation that can be done with an aggregate function. However, window functions do not cause rows to become grouped into a single output row like non-window aggregate calls would. Instead, the rows retain their separate identities. Behind the scenes, the window function is able to access more than just the current row of the query result.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb39-1"><a href="window-functions.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> {<span class="kw">columns</span>},</span>
-<span id="cb39-2"><a href="window-functions.html#cb39-2" aria-hidden="true" tabindex="-1"></a>  {window_func} <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> {partition_key} <span class="kw">ORDER</span> <span class="kw">BY</span> {order_key})</span>
-<span id="cb39-3"><a href="window-functions.html#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> table1</span></code></pre></div>
-<div class="sourceCode" id="cb40"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb40-1"><a href="window-functions.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> iris</span></code></pre></div>
-<div class="knitsql-table">
-<table>
-<caption><span id="tab:unnamed-chunk-1">Table 2.1: </span>Displaying records 1 - 10</caption>
-<thead>
-<tr class="header">
-<th align="left">id</th>
-<th align="right">sepal_length</th>
-<th align="right">sepal_width</th>
-<th align="right">petal_length</th>
-<th align="right">petal_width</th>
-<th align="left">species</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">1</td>
-<td align="right">5.1</td>
-<td align="right">3.5</td>
-<td align="right">1.4</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="even">
-<td align="left">2</td>
-<td align="right">4.9</td>
-<td align="right">3.0</td>
-<td align="right">1.4</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="odd">
-<td align="left">3</td>
-<td align="right">4.7</td>
-<td align="right">3.2</td>
-<td align="right">1.3</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="even">
-<td align="left">4</td>
-<td align="right">4.6</td>
-<td align="right">3.1</td>
-<td align="right">1.5</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="odd">
-<td align="left">5</td>
-<td align="right">5.0</td>
-<td align="right">3.6</td>
-<td align="right">1.4</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="even">
-<td align="left">6</td>
-<td align="right">5.4</td>
-<td align="right">3.9</td>
-<td align="right">1.7</td>
-<td align="right">0.4</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="odd">
-<td align="left">7</td>
-<td align="right">4.6</td>
-<td align="right">3.4</td>
-<td align="right">1.4</td>
-<td align="right">0.3</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="even">
-<td align="left">8</td>
-<td align="right">5.0</td>
-<td align="right">3.4</td>
-<td align="right">1.5</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="odd">
-<td align="left">9</td>
-<td align="right">4.4</td>
-<td align="right">2.9</td>
-<td align="right">1.4</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="even">
-<td align="left">10</td>
-<td align="right">4.9</td>
-<td align="right">3.1</td>
-<td align="right">1.5</td>
-<td align="right">0.1</td>
-<td align="left">setosa</td>
-</tr>
-</tbody>
-</table>
+<div id="using-apache-hive-and-impala" class="section level1" number="12">
+<h1><span class="header-section-number">C</span> Using Apache Hive and Impala</h1>
+<p>use command line interface to query data</p>
+<ul>
+<li><p>Beeline for Hive, use JDBC</p></li>
+<li><p>Impala Shell for Impala, doesn’t use ODBC or JDBC to connect to Impala. It uses a different interface called Apache Thrift</p></li>
+</ul>
+<div id="apache-hive" class="section level2" number="12.1">
+<h2><span class="header-section-number">C.1</span> Apache Hive</h2>
+<p>starting hive using beeline</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb60-1"><a href="using-apache-hive-and-impala.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="ex">beeline</span> -u jdbc:hive2://localhost:10000/fly -n training -p training</span></code></pre></div>
+<ul>
+<li><p><code>-ur</code> url</p></li>
+<li><p><code>-n</code> name</p></li>
+<li><p><code>-p</code> password</p></li>
+</ul>
+<p>query must end with a semicolon <code>;</code>.</p>
+<p>Use <code>!quit</code> (without semicolon because it is not a query) to quit beeline</p>
 </div>
-<div class="sourceCode" id="cb41"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb41-1"><a href="window-functions.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
-<span id="cb41-2"><a href="window-functions.html#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>, petal_length,</span>
-<span id="cb41-3"><a href="window-functions.html#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">AVG</span>(petal_length) <span class="kw">OVER</span>(<span class="kw">PARTITION</span> <span class="kw">BY</span> species) <span class="kw">AS</span> species_petal_length </span>
-<span id="cb41-4"><a href="window-functions.html#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> iris</span></code></pre></div>
-<div class="knitsql-table">
-<table>
-<caption><span id="tab:unnamed-chunk-2">Table 2.2: </span>Displaying records 1 - 10</caption>
-<thead>
-<tr class="header">
-<th align="left">id</th>
-<th align="right">petal_length</th>
-<th align="right">species_petal_length</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">1</td>
-<td align="right">1.4</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="even">
-<td align="left">2</td>
-<td align="right">1.4</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="odd">
-<td align="left">3</td>
-<td align="right">1.3</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="even">
-<td align="left">4</td>
-<td align="right">1.5</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="odd">
-<td align="left">5</td>
-<td align="right">1.4</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="even">
-<td align="left">6</td>
-<td align="right">1.7</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="odd">
-<td align="left">7</td>
-<td align="right">1.4</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="even">
-<td align="left">8</td>
-<td align="right">1.5</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="odd">
-<td align="left">9</td>
-<td align="right">1.4</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="even">
-<td align="left">10</td>
-<td align="right">1.5</td>
-<td align="right">1.46</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="create-rankings" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Create Rankings</h2>
-<div class="sourceCode" id="cb42"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb42-1"><a href="window-functions.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
-<span id="cb42-2"><a href="window-functions.html#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>, </span>
-<span id="cb42-3"><a href="window-functions.html#cb42-3" aria-hidden="true" tabindex="-1"></a>  petal_length,</span>
-<span id="cb42-4"><a href="window-functions.html#cb42-4" aria-hidden="true" tabindex="-1"></a>  species, </span>
-<span id="cb42-5"><a href="window-functions.html#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RANK</span>() <span class="kw">OVER</span>(<span class="kw">ORDER</span> <span class="kw">BY</span> petal_length <span class="kw">DESC</span>)</span>
-<span id="cb42-6"><a href="window-functions.html#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> iris</span></code></pre></div>
-<div class="knitsql-table">
-<table>
-<caption><span id="tab:unnamed-chunk-3">Table 2.3: </span>Displaying records 1 - 10</caption>
-<thead>
-<tr class="header">
-<th align="right">id</th>
-<th align="right">petal_length</th>
-<th align="left">species</th>
-<th align="right">rank</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">119</td>
-<td align="right">6.9</td>
-<td align="left">virginica</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="right">118</td>
-<td align="right">6.7</td>
-<td align="left">virginica</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="right">123</td>
-<td align="right">6.7</td>
-<td align="left">virginica</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">106</td>
-<td align="right">6.6</td>
-<td align="left">virginica</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="right">132</td>
-<td align="right">6.4</td>
-<td align="left">virginica</td>
-<td align="right">5</td>
-</tr>
-<tr class="even">
-<td align="right">108</td>
-<td align="right">6.3</td>
-<td align="left">virginica</td>
-<td align="right">6</td>
-</tr>
-<tr class="odd">
-<td align="right">110</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="right">136</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="right">131</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="right">126</td>
-<td align="right">6.0</td>
-<td align="left">virginica</td>
-<td align="right">10</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sourceCode" id="cb43"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb43-1"><a href="window-functions.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
-<span id="cb43-2"><a href="window-functions.html#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>, </span>
-<span id="cb43-3"><a href="window-functions.html#cb43-3" aria-hidden="true" tabindex="-1"></a>  petal_length,</span>
-<span id="cb43-4"><a href="window-functions.html#cb43-4" aria-hidden="true" tabindex="-1"></a>  species, </span>
-<span id="cb43-5"><a href="window-functions.html#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">DENSE_RANK</span>() <span class="kw">OVER</span>(<span class="kw">ORDER</span> <span class="kw">BY</span> petal_length <span class="kw">DESC</span>)</span>
-<span id="cb43-6"><a href="window-functions.html#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> iris</span></code></pre></div>
-<div class="knitsql-table">
-<table>
-<caption><span id="tab:unnamed-chunk-4">Table 2.4: </span>Displaying records 1 - 10</caption>
-<thead>
-<tr class="header">
-<th align="right">id</th>
-<th align="right">petal_length</th>
-<th align="left">species</th>
-<th align="right">dense_rank</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">119</td>
-<td align="right">6.9</td>
-<td align="left">virginica</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="right">118</td>
-<td align="right">6.7</td>
-<td align="left">virginica</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="right">123</td>
-<td align="right">6.7</td>
-<td align="left">virginica</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">106</td>
-<td align="right">6.6</td>
-<td align="left">virginica</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="right">132</td>
-<td align="right">6.4</td>
-<td align="left">virginica</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="right">108</td>
-<td align="right">6.3</td>
-<td align="left">virginica</td>
-<td align="right">5</td>
-</tr>
-<tr class="odd">
-<td align="right">110</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">6</td>
-</tr>
-<tr class="even">
-<td align="right">136</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">6</td>
-</tr>
-<tr class="odd">
-<td align="right">131</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">6</td>
-</tr>
-<tr class="even">
-<td align="right">126</td>
-<td align="right">6.0</td>
-<td align="left">virginica</td>
-<td align="right">7</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sourceCode" id="cb44"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb44-1"><a href="window-functions.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
-<span id="cb44-2"><a href="window-functions.html#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>, </span>
-<span id="cb44-3"><a href="window-functions.html#cb44-3" aria-hidden="true" tabindex="-1"></a>  petal_length,</span>
-<span id="cb44-4"><a href="window-functions.html#cb44-4" aria-hidden="true" tabindex="-1"></a>  species, </span>
-<span id="cb44-5"><a href="window-functions.html#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RANK</span>() <span class="kw">OVER</span>(<span class="kw">PARTITION</span> <span class="kw">BY</span> species <span class="kw">ORDER</span> <span class="kw">BY</span> petal_length <span class="kw">DESC</span>)</span>
-<span id="cb44-6"><a href="window-functions.html#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> iris</span></code></pre></div>
-<div class="knitsql-table">
-<table>
-<caption><span id="tab:unnamed-chunk-5">Table 2.5: </span>Displaying records 1 - 10</caption>
-<thead>
-<tr class="header">
-<th align="right">id</th>
-<th align="right">petal_length</th>
-<th align="left">species</th>
-<th align="right">rank</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">45</td>
-<td align="right">1.9</td>
-<td align="left">setosa</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="right">25</td>
-<td align="right">1.9</td>
-<td align="left">setosa</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="right">21</td>
-<td align="right">1.7</td>
-<td align="left">setosa</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="right">19</td>
-<td align="right">1.7</td>
-<td align="left">setosa</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="right">6</td>
-<td align="right">1.7</td>
-<td align="left">setosa</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="right">24</td>
-<td align="right">1.7</td>
-<td align="left">setosa</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="right">12</td>
-<td align="right">1.6</td>
-<td align="left">setosa</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="right">26</td>
-<td align="right">1.6</td>
-<td align="left">setosa</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="right">44</td>
-<td align="right">1.6</td>
-<td align="left">setosa</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="right">30</td>
-<td align="right">1.6</td>
-<td align="left">setosa</td>
-<td align="right">7</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="window-functions.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dplyr</span></span>
-<span id="cb45-2"><a href="window-functions.html#cb45-2" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;data/iris.csv&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-3"><a href="window-functions.html#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rank =</span> <span class="fu">rank</span>(<span class="fu">desc</span>(petal_length))) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-4"><a href="window-functions.html#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-5"><a href="window-functions.html#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(rank) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-6"><a href="window-functions.html#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, petal_length, rank)</span>
-<span id="cb45-7"><a href="window-functions.html#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 150 x 4</span></span>
-<span id="cb45-8"><a href="window-functions.html#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   species [3]</span></span>
-<span id="cb45-9"><a href="window-functions.html#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    species      id petal_length  rank</span></span>
-<span id="cb45-10"><a href="window-functions.html#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb45-11"><a href="window-functions.html#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 virginica   119          6.9   1  </span></span>
-<span id="cb45-12"><a href="window-functions.html#cb45-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 virginica   118          6.7   2.5</span></span>
-<span id="cb45-13"><a href="window-functions.html#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 virginica   123          6.7   2.5</span></span>
-<span id="cb45-14"><a href="window-functions.html#cb45-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 virginica   106          6.6   4  </span></span>
-<span id="cb45-15"><a href="window-functions.html#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 virginica   132          6.4   5  </span></span>
-<span id="cb45-16"><a href="window-functions.html#cb45-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 virginica   108          6.3   6  </span></span>
-<span id="cb45-17"><a href="window-functions.html#cb45-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 virginica   110          6.1   8  </span></span>
-<span id="cb45-18"><a href="window-functions.html#cb45-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 virginica   131          6.1   8  </span></span>
-<span id="cb45-19"><a href="window-functions.html#cb45-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 virginica   136          6.1   8  </span></span>
-<span id="cb45-20"><a href="window-functions.html#cb45-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 virginica   101          6    10.5</span></span>
-<span id="cb45-21"><a href="window-functions.html#cb45-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 140 more rows</span></span></code></pre></div>
+<div id="apache-impala" class="section level2" number="12.2">
+<h2><span class="header-section-number">C.2</span> Apache Impala</h2>
+<p>start</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb61-1"><a href="using-apache-hive-and-impala.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="ex">impala-shell</span></span></code></pre></div>
+<p>use <code>-h</code> (help) to see additional arguments</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb62-1"><a href="using-apache-hive-and-impala.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="ex">impala-shell</span> -h</span></code></pre></div>
+<p>use <code>-d</code> to set current database</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb63-1"><a href="using-apache-hive-and-impala.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="ex">impala-shell</span> -d fun</span></code></pre></div>
+<p>use <code>quit;</code> (without exclamation, and with semicolon) to quit impala</p>
 
 </div>
 </div>
@@ -701,8 +290,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="aggregating.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="joining.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="big-data-databases-and-sql.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -733,7 +322,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/enixam/data-manipulation-sql/edit/master/window-functions.Rmd",
+"link": "https://github.com/enixam/data-manipulation-sql/edit/master/hive-impala.Rmd",
 "text": "Edit"
 },
 "history": {

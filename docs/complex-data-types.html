@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 Window Functions | SQL cookbook</title>
+  <title>Chapter 6 Complex Data Types | SQL cookbook</title>
   <meta name="description" content="This book introduces essential SQL commands for data maninpulation, as well as presenting equivalent dplyr code for complex queries." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 Window Functions | SQL cookbook" />
+  <meta property="og:title" content="Chapter 6 Complex Data Types | SQL cookbook" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="enixam/data-manipulation-sql" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 Window Functions | SQL cookbook" />
+  <meta name="twitter:title" content="Chapter 6 Complex Data Types | SQL cookbook" />
   
   <meta name="twitter:description" content="This book introduces essential SQL commands for data maninpulation, as well as presenting equivalent dplyr code for complex queries." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="aggregating.html"/>
-<link rel="next" href="joining.html"/>
+<link rel="prev" href="joining.html"/>
+<link rel="next" href="miscellaneous-query-techniques.html"/>
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -254,445 +254,291 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="window-functions" class="section level1" number="4">
-<h1><span class="header-section-number">Chapter 4</span> Window Functions</h1>
-<p><a href="https://www.postgresql.org/docs/current/functions-window.html" class="uri">https://www.postgresql.org/docs/current/functions-window.html</a></p>
-<p>A window function performs a calculation across a set of table rows that are somehow related to the current row. This is comparable to the type of calculation that can be done with an aggregate function. However, window functions do not cause rows to become grouped into a single output row like non-window aggregate calls would. Instead, the rows retain their separate identities. Behind the scenes, the window function is able to access more than just the current row of the query result.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb39-1"><a href="window-functions.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> {<span class="kw">columns</span>},</span>
-<span id="cb39-2"><a href="window-functions.html#cb39-2" aria-hidden="true" tabindex="-1"></a>  {window_func} <span class="kw">OVER</span> (<span class="kw">PARTITION</span> <span class="kw">BY</span> {partition_key} <span class="kw">ORDER</span> <span class="kw">BY</span> {order_key})</span>
-<span id="cb39-3"><a href="window-functions.html#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> table1</span></code></pre></div>
-<div class="sourceCode" id="cb40"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb40-1"><a href="window-functions.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> iris</span></code></pre></div>
+<div id="complex-data-types" class="section level1" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Complex Data Types</h1>
+<p>The notion of data types underpin endless possibilities for type-specific operations. For example, we could extract the year component from a date, yet the same operation does not make any sense when applied to a string. On the other hand, regular expressions are designed for string matching problems and cannot be adapted to date.</p>
+<div id="converting-data-types" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Converting Data Types</h2>
+<p>There is no guarantee that SQL will always correctly recognize the right data type for columns. 2020-11-28 means a date, but can be imported as a string. Since type-specific operations are only defined for certain data types. It’s natural to think about converting some columnsn to the “right” data type. To change the data type of a column, we simply need to use the <code>column::datatype</code> format,
+where column is the column name, and data type is the data type you want to change the column into.</p>
+<p><code>::</code></p>
+<p><code>CAST</code></p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb46-1"><a href="complex-data-types.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> shop, <span class="fu">SUM</span>((price <span class="kw">IS</span>  <span class="kw">NULL</span>):<span class="ch">:int</span>), <span class="fu">COUNT</span>(<span class="op">*</span>) </span>
+<span id="cb46-2"><a href="complex-data-types.html#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> inventory</span>
+<span id="cb46-3"><a href="complex-data-types.html#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> shop</span></code></pre></div>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-1">Table 2.1: </span>Displaying records 1 - 10</caption>
+<caption><span id="tab:unnamed-chunk-1">Table 2.1: </span>2 records</caption>
 <thead>
 <tr class="header">
-<th align="left">id</th>
-<th align="right">sepal_length</th>
-<th align="right">sepal_width</th>
-<th align="right">petal_length</th>
-<th align="right">petal_width</th>
-<th align="left">species</th>
+<th align="left">shop</th>
+<th align="right">sum</th>
+<th align="right">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Board ’Em</td>
+<td align="right">1</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">Dicey</td>
+<td align="right">0</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="date-and-time" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Date and Time</h2>
+<p>To see your current date settings, you can use the following command:</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb47-1"><a href="complex-data-types.html#cb47-1" aria-hidden="true" tabindex="-1"></a>SHOW DateStyle</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 2.2: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">DateStyle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ISO, MDY</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb48-1"><a href="complex-data-types.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> DateStyle<span class="op">=</span><span class="st">&#39;ISO, MDY&#39;</span>;</span></code></pre></div>
+<p>In addition to displaying dates that are input as strings, we can display the current date
+very simply using the <code>current_date</code> keywords in Postgres.</p>
+<p>Additionally, the SQL standard offers a TIMESTAMP data type. A
+timestamp represents a date and a time, down to a microsecond. This can be displayed via the <code>current_timestamp</code> keyword or the <code>NOW()</code> function.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb49-1"><a href="complex-data-types.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">current_date</span>, <span class="fu">current_timestamp</span>, NOW()</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-4">Table 2.4: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">date</th>
+<th align="left">now</th>
+<th align="left">now</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2020-11-28</td>
+<td align="left">2020-11-28 23:55:55</td>
+<td align="left">2020-11-28 23:55:55</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Often, we will want to decompose our dates into their component parts. For example,
+we may be interested in only the year and month, but not the day, for the monthly
+analysis of our data. To do this, we can use the syntax <code>EXTRACT(component FROM date)</code>.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb50-1"><a href="complex-data-types.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">current_date</span>,</span>
+<span id="cb50-2"><a href="complex-data-types.html#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">EXTRACT</span>(<span class="dt">year</span> <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">year</span>,</span>
+<span id="cb50-3"><a href="complex-data-types.html#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">EXTRACT</span>(<span class="dt">month</span> <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">month</span>,</span>
+<span id="cb50-4"><a href="complex-data-types.html#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">EXTRACT</span>(<span class="dt">day</span> <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">day</span></span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-5">Table 2.5: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">date</th>
+<th align="right">year</th>
+<th align="right">month</th>
+<th align="right">day</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2020-11-28</td>
+<td align="right">2020</td>
+<td align="right">11</td>
+<td align="right">28</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Similarly, we can abbreviate these components as <code>y,</code>mon<code>, and</code>d`,</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb51-1"><a href="complex-data-types.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">current_date</span>,</span>
+<span id="cb51-2"><a href="complex-data-types.html#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">EXTRACT</span>(y <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">year</span>,</span>
+<span id="cb51-3"><a href="complex-data-types.html#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">EXTRACT</span>(mon <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">month</span>,</span>
+<span id="cb51-4"><a href="complex-data-types.html#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">EXTRACT</span>(d <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> <span class="dt">day</span></span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-6">Table 2.6: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">date</th>
+<th align="right">year</th>
+<th align="right">month</th>
+<th align="right">day</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2020-11-28</td>
+<td align="right">2020</td>
+<td align="right">11</td>
+<td align="right">28</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We can also extract components like day of the week, week of the year, or quarter. Note that <code>dow</code> and <code>isodow</code> use different standard to extract day-of-week component. <code>dow</code> starts at 0 (Sunday) and goes up to Saturday, while <code>isodow</code> which starts at
+1 (Monday) and goes up to 7 (Sunday)</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb52-1"><a href="complex-data-types.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">current_date</span>,</span>
+<span id="cb52-2"><a href="complex-data-types.html#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">EXTRACT</span>(isodow <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> day_of_week,</span>
+<span id="cb52-3"><a href="complex-data-types.html#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">EXTRACT</span>(week <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> week_of_year,</span>
+<span id="cb52-4"><a href="complex-data-types.html#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">EXTRACT</span>(quarter <span class="kw">FROM</span> <span class="fu">current_date</span>) <span class="kw">AS</span> quarter</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-7">Table 2.7: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">date</th>
+<th align="right">day_of_week</th>
+<th align="right">week_of_year</th>
+<th align="right">quarter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2020-11-28</td>
+<td align="right">6</td>
+<td align="right">48</td>
+<td align="right">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="array" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Array</h2>
+<p><a href="https://www.postgresql.org/docs/current/functions-array.html#ARRAY-FUNCTIONS-TABLE" class="uri">https://www.postgresql.org/docs/current/functions-array.html#ARRAY-FUNCTIONS-TABLE</a></p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb53-1"><a href="complex-data-types.html#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb53-2"><a href="complex-data-types.html#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">array</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>],</span>
+<span id="cb53-3"><a href="complex-data-types.html#cb53-3" aria-hidden="true" tabindex="-1"></a>  array_length(<span class="dt">ARRAY</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>], <span class="dv">1</span>)</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-8">Table 2.8: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">array</th>
+<th align="right">array_length</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">{1,2,3,4}</td>
+<td align="right">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb54-1"><a href="complex-data-types.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> unnest(<span class="dt">ARRAY</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]) <span class="kw">AS</span> unnested_array</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-9">Table 2.9: </span>3 records</caption>
+<thead>
+<tr class="header">
+<th align="left">unnested_array</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">1</td>
-<td align="right">5.1</td>
-<td align="right">3.5</td>
-<td align="right">1.4</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
 </tr>
 <tr class="even">
 <td align="left">2</td>
-<td align="right">4.9</td>
-<td align="right">3.0</td>
-<td align="right">1.4</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
 </tr>
 <tr class="odd">
 <td align="left">3</td>
-<td align="right">4.7</td>
-<td align="right">3.2</td>
-<td align="right">1.3</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
 </tr>
-<tr class="even">
-<td align="left">4</td>
-<td align="right">4.6</td>
-<td align="right">3.1</td>
-<td align="right">1.5</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
+</tbody>
+</table>
+</div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb55-1"><a href="complex-data-types.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
+<span id="cb55-2"><a href="complex-data-types.html#cb55-2" aria-hidden="true" tabindex="-1"></a>  string_to_array(<span class="st">&#39;Hello my world&#39;</span>, <span class="st">&#39; &#39;</span>)</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-10">Table 3.1: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">string_to_array</th>
 </tr>
+</thead>
+<tbody>
 <tr class="odd">
-<td align="left">5</td>
-<td align="right">5.0</td>
-<td align="right">3.6</td>
-<td align="right">1.4</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
+<td align="left">{Hello,my,world}</td>
 </tr>
-<tr class="even">
+</tbody>
+</table>
+</div>
+</div>
+<div id="json" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> JSON</h2>
+<div class="sourceCode" id="cb56"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb56-1"><a href="complex-data-types.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb56-2"><a href="complex-data-types.html#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;{</span></span>
+<span id="cb56-3"><a href="complex-data-types.html#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;a&quot;: 1,</span></span>
+<span id="cb56-4"><a href="complex-data-types.html#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;b&quot;: [</span></span>
+<span id="cb56-5"><a href="complex-data-types.html#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="st">  {&quot;d&quot;: 4},</span></span>
+<span id="cb56-6"><a href="complex-data-types.html#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="st">  {&quot;d&quot;: 6},</span></span>
+<span id="cb56-7"><a href="complex-data-types.html#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="st">  {&quot;d&quot;: 4}</span></span>
+<span id="cb56-8"><a href="complex-data-types.html#cb56-8" aria-hidden="true" tabindex="-1"></a><span class="st">  ],</span></span>
+<span id="cb56-9"><a href="complex-data-types.html#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;c&quot;: 3</span></span>
+<span id="cb56-10"><a href="complex-data-types.html#cb56-10" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span>:<span class="ch">:JSON</span> <span class="op">-&gt;</span> <span class="st">&#39;b&#39;</span> <span class="kw">AS</span> <span class="kw">data</span>;</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-11">Table 2.10: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">[</td>
+</tr>
+</tbody>
+</table>
+<p>{“d”: 4},
+{“d”: 6},
+{“d”: 4}
+] |</p>
+</div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb57-1"><a href="complex-data-types.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb57-2"><a href="complex-data-types.html#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;{</span></span>
+<span id="cb57-3"><a href="complex-data-types.html#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;a&quot;: 1,</span></span>
+<span id="cb57-4"><a href="complex-data-types.html#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;b&quot;: [</span></span>
+<span id="cb57-5"><a href="complex-data-types.html#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="st">  {&quot;d&quot;: 4},</span></span>
+<span id="cb57-6"><a href="complex-data-types.html#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="st">  {&quot;d&quot;: 6},</span></span>
+<span id="cb57-7"><a href="complex-data-types.html#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="st">  {&quot;d&quot;: 4}</span></span>
+<span id="cb57-8"><a href="complex-data-types.html#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="st">  ],</span></span>
+<span id="cb57-9"><a href="complex-data-types.html#cb57-9" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;c&quot;: 3</span></span>
+<span id="cb57-10"><a href="complex-data-types.html#cb57-10" aria-hidden="true" tabindex="-1"></a><span class="st">  }&#39;</span>:<span class="ch">:JSON</span> #<span class="op">&gt;</span> <span class="dt">ARRAY</span>[<span class="st">&#39;b&#39;</span>, <span class="st">&#39;1&#39;</span>, <span class="st">&#39;d&#39;</span>] <span class="kw">AS</span> <span class="kw">data</span>;</span></code></pre></div>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-12">Table 2.11: </span>1 records</caption>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
 <td align="left">6</td>
-<td align="right">5.4</td>
-<td align="right">3.9</td>
-<td align="right">1.7</td>
-<td align="right">0.4</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="odd">
-<td align="left">7</td>
-<td align="right">4.6</td>
-<td align="right">3.4</td>
-<td align="right">1.4</td>
-<td align="right">0.3</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="even">
-<td align="left">8</td>
-<td align="right">5.0</td>
-<td align="right">3.4</td>
-<td align="right">1.5</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="odd">
-<td align="left">9</td>
-<td align="right">4.4</td>
-<td align="right">2.9</td>
-<td align="right">1.4</td>
-<td align="right">0.2</td>
-<td align="left">setosa</td>
-</tr>
-<tr class="even">
-<td align="left">10</td>
-<td align="right">4.9</td>
-<td align="right">3.1</td>
-<td align="right">1.5</td>
-<td align="right">0.1</td>
-<td align="left">setosa</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb41"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb41-1"><a href="window-functions.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
-<span id="cb41-2"><a href="window-functions.html#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>, petal_length,</span>
-<span id="cb41-3"><a href="window-functions.html#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">AVG</span>(petal_length) <span class="kw">OVER</span>(<span class="kw">PARTITION</span> <span class="kw">BY</span> species) <span class="kw">AS</span> species_petal_length </span>
-<span id="cb41-4"><a href="window-functions.html#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> iris</span></code></pre></div>
-<div class="knitsql-table">
-<table>
-<caption><span id="tab:unnamed-chunk-2">Table 2.2: </span>Displaying records 1 - 10</caption>
-<thead>
-<tr class="header">
-<th align="left">id</th>
-<th align="right">petal_length</th>
-<th align="right">species_petal_length</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">1</td>
-<td align="right">1.4</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="even">
-<td align="left">2</td>
-<td align="right">1.4</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="odd">
-<td align="left">3</td>
-<td align="right">1.3</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="even">
-<td align="left">4</td>
-<td align="right">1.5</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="odd">
-<td align="left">5</td>
-<td align="right">1.4</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="even">
-<td align="left">6</td>
-<td align="right">1.7</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="odd">
-<td align="left">7</td>
-<td align="right">1.4</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="even">
-<td align="left">8</td>
-<td align="right">1.5</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="odd">
-<td align="left">9</td>
-<td align="right">1.4</td>
-<td align="right">1.46</td>
-</tr>
-<tr class="even">
-<td align="left">10</td>
-<td align="right">1.5</td>
-<td align="right">1.46</td>
-</tr>
-</tbody>
-</table>
 </div>
-<div id="create-rankings" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Create Rankings</h2>
-<div class="sourceCode" id="cb42"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb42-1"><a href="window-functions.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
-<span id="cb42-2"><a href="window-functions.html#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>, </span>
-<span id="cb42-3"><a href="window-functions.html#cb42-3" aria-hidden="true" tabindex="-1"></a>  petal_length,</span>
-<span id="cb42-4"><a href="window-functions.html#cb42-4" aria-hidden="true" tabindex="-1"></a>  species, </span>
-<span id="cb42-5"><a href="window-functions.html#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RANK</span>() <span class="kw">OVER</span>(<span class="kw">ORDER</span> <span class="kw">BY</span> petal_length <span class="kw">DESC</span>)</span>
-<span id="cb42-6"><a href="window-functions.html#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> iris</span></code></pre></div>
-<div class="knitsql-table">
-<table>
-<caption><span id="tab:unnamed-chunk-3">Table 2.3: </span>Displaying records 1 - 10</caption>
-<thead>
-<tr class="header">
-<th align="right">id</th>
-<th align="right">petal_length</th>
-<th align="left">species</th>
-<th align="right">rank</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">119</td>
-<td align="right">6.9</td>
-<td align="left">virginica</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="right">118</td>
-<td align="right">6.7</td>
-<td align="left">virginica</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="right">123</td>
-<td align="right">6.7</td>
-<td align="left">virginica</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">106</td>
-<td align="right">6.6</td>
-<td align="left">virginica</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="right">132</td>
-<td align="right">6.4</td>
-<td align="left">virginica</td>
-<td align="right">5</td>
-</tr>
-<tr class="even">
-<td align="right">108</td>
-<td align="right">6.3</td>
-<td align="left">virginica</td>
-<td align="right">6</td>
-</tr>
-<tr class="odd">
-<td align="right">110</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="right">136</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="right">131</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="right">126</td>
-<td align="right">6.0</td>
-<td align="left">virginica</td>
-<td align="right">10</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sourceCode" id="cb43"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb43-1"><a href="window-functions.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
-<span id="cb43-2"><a href="window-functions.html#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>, </span>
-<span id="cb43-3"><a href="window-functions.html#cb43-3" aria-hidden="true" tabindex="-1"></a>  petal_length,</span>
-<span id="cb43-4"><a href="window-functions.html#cb43-4" aria-hidden="true" tabindex="-1"></a>  species, </span>
-<span id="cb43-5"><a href="window-functions.html#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">DENSE_RANK</span>() <span class="kw">OVER</span>(<span class="kw">ORDER</span> <span class="kw">BY</span> petal_length <span class="kw">DESC</span>)</span>
-<span id="cb43-6"><a href="window-functions.html#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> iris</span></code></pre></div>
-<div class="knitsql-table">
-<table>
-<caption><span id="tab:unnamed-chunk-4">Table 2.4: </span>Displaying records 1 - 10</caption>
-<thead>
-<tr class="header">
-<th align="right">id</th>
-<th align="right">petal_length</th>
-<th align="left">species</th>
-<th align="right">dense_rank</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">119</td>
-<td align="right">6.9</td>
-<td align="left">virginica</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="right">118</td>
-<td align="right">6.7</td>
-<td align="left">virginica</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="right">123</td>
-<td align="right">6.7</td>
-<td align="left">virginica</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">106</td>
-<td align="right">6.6</td>
-<td align="left">virginica</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="right">132</td>
-<td align="right">6.4</td>
-<td align="left">virginica</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="right">108</td>
-<td align="right">6.3</td>
-<td align="left">virginica</td>
-<td align="right">5</td>
-</tr>
-<tr class="odd">
-<td align="right">110</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">6</td>
-</tr>
-<tr class="even">
-<td align="right">136</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">6</td>
-</tr>
-<tr class="odd">
-<td align="right">131</td>
-<td align="right">6.1</td>
-<td align="left">virginica</td>
-<td align="right">6</td>
-</tr>
-<tr class="even">
-<td align="right">126</td>
-<td align="right">6.0</td>
-<td align="left">virginica</td>
-<td align="right">7</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sourceCode" id="cb44"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb44-1"><a href="window-functions.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> </span>
-<span id="cb44-2"><a href="window-functions.html#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span>, </span>
-<span id="cb44-3"><a href="window-functions.html#cb44-3" aria-hidden="true" tabindex="-1"></a>  petal_length,</span>
-<span id="cb44-4"><a href="window-functions.html#cb44-4" aria-hidden="true" tabindex="-1"></a>  species, </span>
-<span id="cb44-5"><a href="window-functions.html#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RANK</span>() <span class="kw">OVER</span>(<span class="kw">PARTITION</span> <span class="kw">BY</span> species <span class="kw">ORDER</span> <span class="kw">BY</span> petal_length <span class="kw">DESC</span>)</span>
-<span id="cb44-6"><a href="window-functions.html#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> iris</span></code></pre></div>
-<div class="knitsql-table">
-<table>
-<caption><span id="tab:unnamed-chunk-5">Table 2.5: </span>Displaying records 1 - 10</caption>
-<thead>
-<tr class="header">
-<th align="right">id</th>
-<th align="right">petal_length</th>
-<th align="left">species</th>
-<th align="right">rank</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">45</td>
-<td align="right">1.9</td>
-<td align="left">setosa</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="right">25</td>
-<td align="right">1.9</td>
-<td align="left">setosa</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="right">21</td>
-<td align="right">1.7</td>
-<td align="left">setosa</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="right">19</td>
-<td align="right">1.7</td>
-<td align="left">setosa</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="right">6</td>
-<td align="right">1.7</td>
-<td align="left">setosa</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="right">24</td>
-<td align="right">1.7</td>
-<td align="left">setosa</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="right">12</td>
-<td align="right">1.6</td>
-<td align="left">setosa</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="right">26</td>
-<td align="right">1.6</td>
-<td align="left">setosa</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="right">44</td>
-<td align="right">1.6</td>
-<td align="left">setosa</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="right">30</td>
-<td align="right">1.6</td>
-<td align="left">setosa</td>
-<td align="right">7</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="window-functions.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dplyr</span></span>
-<span id="cb45-2"><a href="window-functions.html#cb45-2" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">&quot;data/iris.csv&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-3"><a href="window-functions.html#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rank =</span> <span class="fu">rank</span>(<span class="fu">desc</span>(petal_length))) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-4"><a href="window-functions.html#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-5"><a href="window-functions.html#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(rank) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-6"><a href="window-functions.html#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, petal_length, rank)</span>
-<span id="cb45-7"><a href="window-functions.html#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 150 x 4</span></span>
-<span id="cb45-8"><a href="window-functions.html#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   species [3]</span></span>
-<span id="cb45-9"><a href="window-functions.html#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    species      id petal_length  rank</span></span>
-<span id="cb45-10"><a href="window-functions.html#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb45-11"><a href="window-functions.html#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 virginica   119          6.9   1  </span></span>
-<span id="cb45-12"><a href="window-functions.html#cb45-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 virginica   118          6.7   2.5</span></span>
-<span id="cb45-13"><a href="window-functions.html#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 virginica   123          6.7   2.5</span></span>
-<span id="cb45-14"><a href="window-functions.html#cb45-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 virginica   106          6.6   4  </span></span>
-<span id="cb45-15"><a href="window-functions.html#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 virginica   132          6.4   5  </span></span>
-<span id="cb45-16"><a href="window-functions.html#cb45-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 virginica   108          6.3   6  </span></span>
-<span id="cb45-17"><a href="window-functions.html#cb45-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 virginica   110          6.1   8  </span></span>
-<span id="cb45-18"><a href="window-functions.html#cb45-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 virginica   131          6.1   8  </span></span>
-<span id="cb45-19"><a href="window-functions.html#cb45-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 virginica   136          6.1   8  </span></span>
-<span id="cb45-20"><a href="window-functions.html#cb45-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 virginica   101          6    10.5</span></span>
-<span id="cb45-21"><a href="window-functions.html#cb45-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 140 more rows</span></span></code></pre></div>
+<div id="text" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> Text</h2>
 
 </div>
 </div>
@@ -701,8 +547,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="aggregating.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="joining.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="joining.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="miscellaneous-query-techniques.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -733,7 +579,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/enixam/data-manipulation-sql/edit/master/window-functions.Rmd",
+"link": "https://github.com/enixam/data-manipulation-sql/edit/master/complex-data-types.Rmd",
 "text": "Edit"
 },
 "history": {

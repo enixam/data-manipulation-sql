@@ -1,7 +1,16 @@
-# Write simple queries 
+# Simple Queries
 
 
-## The `WITH` clause
+## `SELECT`
+
+## Data Types 
+
+
+
+
+
+
+## The `WITH` Clause
 
 https://www.geeksforgeeks.org/sql-with-clause/  
 
@@ -16,4 +25,4 @@ SELECT * FROM inventory_subset
 
 
 
-
+Fundamentally, the definition of a view is saved in the database and can be reused by any query, whereas a `WITH` clause (or Common Table Expression, or CTE) is tied to one specific query and can only be reused by copying. Otherwise, they will be substantially the same

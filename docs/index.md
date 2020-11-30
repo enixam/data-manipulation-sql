@@ -1,7 +1,7 @@
 --- 
-title: "Data Manipulation with SQL"
+title: "SQL cookbook"
 author: "Qiushi Yan"
-date: "2020-07-30"
+date: "2020-11-28"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [references.bib, packages.bib]
@@ -15,7 +15,7 @@ description: "This book introduces essential SQL commands for data maninpulation
 
 
 
-This document covers essential SQL skills for data manipulation, with a main focus on DQL (Data Query Language, always starts with `SELECT`). Quries will typically be interpreted with the `PostgreSQL` dialect in `knitr`'s `sql` engine. I include `dplyr` code when there could be some interesting comparison between these two tools sharing similar philosophy. 
+This document includes query solutions and techniques to common questions in data analysis. Queries will typically be interpreted with the `PostgreSQL` dialect in `knitr`'s `sql` engine. I include `dplyr` code when there could be some interesting comparison between these two tools sharing similar philosophy. 
 
 
 Before each chapter, the following command is automatically evaluated:  
@@ -39,10 +39,12 @@ By default, `SELECT` queries will display the first 10 records of their results 
 
 References include:  
 
-- Coursera course [Analyzing Big Data with SQL](https://www.coursera.org/learn/cloudera-big-data-analysis-sql-queries/)  
+
 
 - [SQL Tutorial](https://www.sqltutorial.org/)  
 
 - [Practical SQL A Beginner’s Guide to Storytelling with Data](https://www.amazon.com/Practical-SQL-Beginners-Guide-Storytelling-ebook/dp/B07197G78H/ref=sr_1_1?dchild=1&keywords=Practical+SQL+A+Beginner%E2%80%99s+Guide+to+Storytelling+with+Data&qid=1587971106&sr=8-1) [@debarros2018practical]  
 
 - [SQL for Data Analytics: Perform fast and efficient data analysis with the power of SQL](https://www.amazon.com/SQL-Data-Analytics-efficient-analysis-ebook/dp/B07QVQGBXB/ref=sr_1_1?dchild=1&keywords=SQL+for+Data+Analytics&qid=1587971254&sr=8-1) [@malik2019sql]
+
+- [Analyzing Big Data with SQL](https://www.coursera.org/learn/cloudera-big-data-analysis-sql-queries/), a coursera course  

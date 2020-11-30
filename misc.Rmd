@@ -1,0 +1,38 @@
+
+# Miscellaneous query techniques
+
+
+# Subqueries 
+
+We have encountered subqueries where we are interested the difference between one's salary and the highest salary in the `employees` table. 
+
+```{sql connection=con}
+SELECT salary - 
+  (SELECT MAX(salary) FROM employees)
+  AS difference
+FROM employees
+```
+
+
+A subquery is nested inside another query. Typically, it’s used for a
+calculation or logical test that provides a value or set of data to be passed
+into the main portion of the query. Its syntax is not unusual: we just
+enclose the subquery in parentheses and use it where needed. For
+example, we can write a subquery that returns multiple rows and treat the results as a table in the FROM clause of the main query. 
+
+Or we can create a
+scalar subquery that returns a single value and use it as part of an expression
+to filter rows via WHERE , IN , and HAVING clauses. These are the most common
+uses of subqueries.
+
+Adding a subquery to a `WHERE` clause can be useful in query statements
+other than SELECT .
+
+```{sql connection=con}
+SELECT *
+FROM employees
+WHERE salary >= (SELECT AVG(salary) FROM employees)
+```
+### Create derived tables 
+
+

@@ -1,5 +1,5 @@
 new_session: yes
-book_filename: "data-manipulation-sql"
+book_filename: "sql-cookbook"
 delete_merged_file: true
 language:
   ui:
@@ -12,12 +12,15 @@ before_chapter_script: "_common.R"
 rmd_files: [
   "index.Rmd",
   "sql-basics.Rmd",
-  "intro-query.Rmd",
   "filtering.Rmd",
   "aggregating.Rmd",
   "window-functions.Rmd",
   "joining-tables.Rmd",
-  "data-types.Rmd",  
+  "complex-data-types.Rmd",  
+  "misc.Rmd",
   "solutions.Rmd",
-  "references.Rmd"
+  "references.Rmd",
+  "traditional-rdbms.Rmd",
+  "big-data.Rmd",
+  "hive-impala.Rmd"
 ]

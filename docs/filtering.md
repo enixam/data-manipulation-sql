@@ -1,9 +1,8 @@
 
 # Filtering  
 
-Filtering means subset your data based on some conditions. 
+Filtering means subset your data based on some conditions. In SQL, filtering is based on the `WHERE` clause
 
-## The `WHERE` clause
 
 ## Operators 
 
@@ -34,10 +33,10 @@ Table: (\#tab:unnamed-chunk-1)4 records
 
 
 
-### Comparison operators 
+### Comparison Operators 
 
 
-### Logical operators 
+### Logical Operators 
 
 Logical operators enable users to combine multiple boolean expressions.  
 
@@ -74,10 +73,10 @@ Table: (\#tab:unnamed-chunk-2)4 records
 
 
 
-### Other relational operators  
+### Other Relational Operators  
 
 
-## Missing values
+## Missing Values
 
 Any rows in which the expression in the `WHERE` clause evaluate  to `false` and any rows in which it evaluates to `NULL`, are filtered out excluded from the result set. `Knitr`'s SQL engine displays `NULL` as `NA` in the resulting table, but remember in databases this is actually `NULL`.    
 
@@ -195,7 +194,7 @@ There is also a version of this operator that negates the result of the comparis
 it returns `true` instead of `NULL`. This shorthand notation for `IS NOT DISTINCT FROM`, `<=>` is supported by Hive, Impala, and MySQL. 
 
 
-### Conditional functions  
+### Conditional Functions  
 
 - `if `
 
@@ -233,7 +232,7 @@ Table: (\#tab:unnamed-chunk-8)4 records
 
 
 
-## The `HAVING` clause  
+## The `HAVING` Clause  
 
 The `WHERE` clause is used before `GROUP BY` , because it makes more sense. The filter specified in the `WHERE` clause is used before grouping. After grouping, you can have a `HAVING` clause, which is similar to `WHERE` , except you can filter by aggregate values as well. In other words,  the `WHERE` clause is used to place conditions on columns, while the `HAVING` clause is used to place conditions on groups. 
 
@@ -274,3 +273,64 @@ FROM inventory
 GROUP BY shop
 HAVING total > 300
 ```
+
+## Filtering by aggregation
+
+
+We want to filter records based on a condition using aggregating values, e.g., find all teachers whose salary is lower than the average salary. This is when an aggregated subquery comes in handy. An aggregated subquery is an subquery in the `FROM` clause, alongside with the source table. First the subquery in `FROM` is run, producing a result (which we can think of as a table named `t`, and this alias is required). This attribute is added to every row of table `teachers`). It is this ‘extended’ table that is evaluated in the `WHERE` clause; that is why the condition there refers to attribute `a` and selecting it. This is like R's recycling rule in data frames: when you create a scalar column, the scalar is repeated to match the length of other columns. 
+
+
+
+
+```sql
+SELECT first_name, last_name, salary, a
+FROM teachers, 
+    (SELECT avg(salary) as a FROM teachers) as t
+WHERE salary <=a
+```
+
+
+<div class="knitsql-table">
+
+
+Table: (\#tab:unnamed-chunk-11)5 records
+
+|first_name |last_name | salary|     a|
+|:----------|:---------|------:|-----:|
+|Janet      |Smith     |  36200| 43817|
+|Samuel     |Cole      |  43500| 43817|
+|Samantha   |Bush      |  36200| 43817|
+|Betty      |Diaz      |  43500| 43817|
+|Kathleen   |Roush     |  38500| 43817|
+
+</div>
+
+Another way: use subqueries in the `WHERE` clause
+
+
+```sql
+SELECT first_name, last_name, salary
+FROM teachers
+WHERE salary <= (
+  SELECT avg(salary) FROM teachers
+)
+```
+
+
+<div class="knitsql-table">
+
+
+Table: (\#tab:unnamed-chunk-12)5 records
+
+|first_name |last_name | salary|
+|:----------|:---------|------:|
+|Janet      |Smith     |  36200|
+|Samuel     |Cole      |  43500|
+|Samantha   |Bush      |  36200|
+|Betty      |Diaz      |  43500|
+|Kathleen   |Roush     |  38500|
+
+</div>
+
+
+

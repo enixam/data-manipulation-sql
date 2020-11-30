@@ -106,15 +106,37 @@ Also, you cannot select aggregating expressions and regular columns in parallel.
 
 ```sql
 -- not run
-SELECT first_name, max(salary) FROM employees
+SELECT first_name, max(salary) 
+FROM employees
 ```
 
 The first is just the column reference first name, that evaluates as a scalar expression. It returns a value for each row in the `employees` table. The second is the aggregate expression, max salary. That returns one row that aggregates all the salary values in the `employees` table.
 
 
+## Aggregate Functions
 
 
-### rowwise aggregating
+There common aggregate functions for summary statistics like `MIN()`, `MAX()`, `AVG`, `SUM`.  
+
+
+Additionally, there are two aggregate functions that do not perform direct computation based on values of columns.
+
+`DISTINCT` can be used as keyword and functions alike. 
+
+`COUNT`  
+
+- `COUNT(*)`: Returns total number of records 
+
+- `COUNT(column_name)`: Return number of **Non Null** values over the column salary. i.e 5.
+
+- `COUNT(DISTINCT Salary)`:  Return number of **distinct Non Null** values over the column salary .i.e 4
+
+
+`CASE WHEN` is often used in calculating proportions and percentages, the standard syntax is 
+
+
+
+## Rowwise Aggregation
 
 There are functions in SQL that are designed to perform computations per row, instead of across rows. For them, we need not to worry about the unmatched length problem. 
 
@@ -124,7 +146,9 @@ For example, there are non-aggregate `GREATEST()` for `MAX()`, and `LEAST` for `
 ```sql
 -- what is the dominant and least-used color for each crayon? 
 SELECT 
-  red, green, blue, GREATEST(red, green, blue), LEAST(red, green, blue)
+  red, green, blue, 
+  GREATEST(red, green, blue), 
+  LEAST(red, green, blue)
 FROM crayons
 ```
 
@@ -178,7 +202,7 @@ crayon %>%
 
 
 
-## The `GROUP BY` clause. 
+## The `GROUP BY` Clause
 
 No surprise, the `GROUP BY` clasue works hand in hand with aggregate expressions, as `group_by()` does with `summarize()` in dplyr.  
 
@@ -203,7 +227,7 @@ Table: (\#tab:unnamed-chunk-9)2 records
 
 </div>
 
-Grouping expressions using column aliases, availabe in PostgreSQL, Impala, Mysql. 
+Grouping expressions using column aliases, available in PostgreSQL, Impala, Mysql. 
 
 
 ```sql
@@ -264,36 +288,17 @@ Table: (\#tab:unnamed-chunk-12)3 records
 
 </div>
 
-```sql
-SELECT * FROM games
-```
-
-
-<div class="knitsql-table">
-
-
-Table: (\#tab:unnamed-chunk-13)5 records
-
-|id |name       |inventor            | year| min_age| min_players| max_players| list_price|
-|:--|:----------|:-------------------|----:|-------:|-----------:|-----------:|----------:|
-|1  |Monopoly   |Elizabeth Magie     | 1903|       8|           2|           6|      19.99|
-|2  |Scrabble   |Alfred Mosher Butts | 1938|       8|           2|           4|      17.99|
-|3  |Clue       |Anthony E. Pratt    | 1944|       8|           2|           6|       9.99|
-|4  |Candy Land |Eleanor Abbott      | 1948|       3|           2|           4|       7.99|
-|5  |Risk       |Albert Lamorisse    | 1957|      10|           2|           5|      29.99|
-
-</div>
 
 
 
 One of the major limitations of the `GROUP BY` clause is that it left you few choices in the `SELECT` list: **either an aggregate expression or columns that appear in `GROUP BY`**  
 
 
-## Common aggregating functions
+## Common Aggregating Functions
 
 
 
-## NULL values in aggregation  
+## `NULL` in Aggregation  
 
 The `COUNT` function was designed to be consistent with these other aggregate functions
 except in the case where you use `COUNT(*)`. So the general rule is that aggregate functions ignore `NULL` values, and the one exception to that rule is when you use `COUNT(*)`.   
@@ -305,11 +310,11 @@ With some SQL engines, you can specify more than one column reference or express
 
 ```sql
 -- this won't work in PostgreSQL
-SELECT COUNT(DISTINCT red, green, blue) FROM crayons
+SELECT COUNT(DISTINCT red, green, blue) F
+ROM crayons
 ```
 
-Also, with some SQL engines, you can use more than one `COUNT(DISTINCT)` in a `SELECT` list,
-like in this example which uses the crayons table.
+Also, with some SQL engines, you can use more than one `COUNT(DISTINCT)` in a `SELECT` list, like in this example which uses the crayons table.
 
 
 ```sql
@@ -327,7 +332,7 @@ GROUP BY pack
 <div class="knitsql-table">
 
 
-Table: (\#tab:unnamed-chunk-15)9 records
+Table: (\#tab:unnamed-chunk-14)9 records
 
 | pack| red_count| green_count| blue_count|
 |----:|---------:|-----------:|----------:|
@@ -343,29 +348,53 @@ Table: (\#tab:unnamed-chunk-15)9 records
 
 </div>
 
-Here, the COUNT function is used three separate times in the `SELECT` list and the `DISTINCT` keyword is included in all three. So the result set has three columns giving the number of unique values in the red column, the number of unique values in the green column, and the number of unique values in the blue column. But with some other SQL engines including Impala, you are limited to only one` COUNT(DISTINCT)` per `SELECT` list. 
+Here, the `COUNT` function is used three separate times in the `SELECT` list and the `DISTINCT` keyword is included in all three. So the result set has three columns giving the number of unique values in the red column, the number of unique values in the green column, and the number of unique values in the blue column. But with some other SQL engines including Impala, you are limited to only one` COUNT(DISTINCT)` per `SELECT` list. 
 
 
 
 
-## Using `GROUP BY` in non-aggregating scenarios 
+## Find distinct combinations 
 
 
-We may question the data quality of `us_counties_2010` cencus: specifically, can there be repetition of observations on counties on the state level? We may want to use `DISTINCT(geo_name)` and `GROUP BY state_us_abbreviation` to eliminate those repetitions:  
+Suppose we want to find distinct combinations of state and county in the census (which should not be repeated). `GROUP BY ` can be used for this sort of task. 
 
 
 ```sql
--- not run
-SELECT DISTINCT(geo_name) 
+SELECT state_us_abbreviation, geo_name
 FROM us_counties_2010
-GROUP BY state_us_abbreviation
+GROUP BY state_us_abbreviation, geo_name
 ```
 
-This works in dplyr 
+
+<div class="knitsql-table">
+
+
+Table: (\#tab:unnamed-chunk-15)Displaying records 1 - 10
+
+|state_us_abbreviation |geo_name            |
+|:---------------------|:-------------------|
+|TX                    |Glasscock County    |
+|UT                    |Box Elder County    |
+|AR                    |Calhoun County      |
+|KY                    |Breckinridge County |
+|NY                    |Lewis County        |
+|NE                    |Thomas County       |
+|CO                    |Douglas County      |
+|AR                    |Hot Spring County   |
+|NE                    |Garden County       |
+|IA                    |Mitchell County     |
+
+</div>
+
+
+
+
+
+Unlike in dplyr, `distinct` cannot be used in conjunction with `group by ` in SQL 
 
 
 ```r
-# dplyr
+# this works in 
 us_counties_2010 <- readr::read_csv("data/us_counties_2010.csv")
 us_counties_2010 %>% 
   group_by(state_us_abbreviation) %>% 
@@ -386,6 +415,119 @@ us_counties_2010 %>%
 #> 10 Cherokee County AL                   
 #> # ... with 3,133 more rows
 ```
+
+
+```sql
+-- sql does not have a "grouped" distinct
+-- not run
+SELECT DISTINCT(geo_name) 
+FROM us_counties_2010
+GROUP BY state_us_abbreviation
+```
+
+
+
+A workaround is using the `array` data type (Section \@ref(array))
+
+
+```sql
+SELECT  state_us_abbreviation, ARRAY_AGG(DISTINCT geo_name)
+FROM us_counties_2010
+GROUP BY state_us_abbreviation
+LIMIT 1 
+```
+
+
+<div class="knitsql-table">
+
+
+Table: (\#tab:unnamed-chunk-18)1 records
+
+|state_us_abbreviation |array_agg                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+|:---------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|AK                    |{"Aleutians East Borough","Aleutians West Census Area","Anchorage Municipality","Bethel Census Area","Bristol Bay Borough","Denali Borough","Dillingham Census Area","Fairbanks North Star Borough","Haines Borough","Hoonah-Angoon Census Area","Juneau City and Borough","Kenai Peninsula Borough","Ketchikan Gateway Borough","Kodiak Island Borough","Lake and Peninsula Borough","Matanuska-Susitna Borough","Nome Census Area","North Slope Borough","Northwest Arctic Borough","Petersburg Census Area","Prince of Wales-Hyder Census Area","Sitka City and Borough","Skagway Municipality","Southeast Fairbanks Census Area","Valdez-Cordova Census Area","Wade Hampton Census Area","Wrangell City and Borough","Yakutat City and Borough","Yukon-Koyukuk Census Area"} |
+
+</div>
+
+## Percentages 
+
+A common used of `CASE` is to compute percentage or proportion. And the trick is to let `CASE` do the group by job manually. Suppose we want to know each school's share in the total salary.   
+
+
+```sql
+SELECT 
+  sum(CASE WHEN school = 'F.D. Roosevelt HS' THEN salary ELSE 0 END
+) / (sum(salary) * 1.0) as porp_fd,
+  sum(CASE WHEN school = 'Myers Middle School' THEN salary ELSE 0 END
+) / (sum(salary) * 1.0) as prop_myers
+FROM teachers
+```
+
+
+<div class="knitsql-table">
+
+
+Table: (\#tab:unnamed-chunk-19)1 records
+
+| porp_fd| prop_myers|
+|-------:|----------:|
+|   0.531|      0.469|
+
+</div>
+
+The command can be easily adapted to, say, compute relative frequency. The following SQL command calculates the relative frequency of each school's teacher
+
+
+```sql
+SELECT 
+  sum(CASE WHEN school = 'F.D. Roosevelt HS' THEN 1 ELSE 0 END
+) / (count(*) * 1.0) as freq_fd,
+  sum(CASE WHEN school = 'Myers Middle School' THEN 1 ELSE 0 END
+) / (count(*) * 1.0) as freq_myers
+FROM teachers
+```
+
+
+<div class="knitsql-table">
+
+
+Table: (\#tab:unnamed-chunk-20)1 records
+
+| freq_fd| freq_myers|
+|-------:|----------:|
+|     0.5|        0.5|
+
+</div>
+
+Yet this requires us to know all levels of school, use repeated syntax, and results in a wide data from that is often not suitable for data analysis. So this computing strategy is only useful when care about a single level or a small number of levels. 
+
+An alternative is using aggregated subqueries (Section \@ref(filtering-by-aggregation))
+
+
+```sql
+SELECT school, 
+      sum(salary) / (max(total_salary) * 1.0) as salary_prop,
+      count(*) / (max(total_count) * 1.0) as rel_freq
+FROM teachers, 
+    (SELECT sum(salary) as total_salary, count(*) as total_count
+    FROM teachers) as t
+GROUP BY school
+```
+
+
+<div class="knitsql-table">
+
+
+Table: (\#tab:unnamed-chunk-21)2 records
+
+|school              | salary_prop| rel_freq|
+|:-------------------|-----------:|--------:|
+|F.D. Roosevelt HS   |       0.531|      0.5|
+|Myers Middle School |       0.469|      0.5|
+
+</div>
+The trick is to first create the aggregation needed (in this case, total salary and counts) with aggregating subqueries, and rely on `GROUP BY` to do the calculation. Since total salary and count are scalar columns, take their max is simply to satisfy the requirements of `GROUP BY`. 
+
 
 
 

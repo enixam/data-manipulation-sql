@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 SQL basics | Data Manipulation with SQL</title>
+  <title>Chapter 1 SQL Basics | SQL cookbook</title>
   <meta name="description" content="This book introduces essential SQL commands for data maninpulation, as well as presenting equivalent dplyr code for complex queries." />
-  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 SQL basics | Data Manipulation with SQL" />
+  <meta property="og:title" content="Chapter 1 SQL Basics | SQL cookbook" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="enixam/data-manipulation-sql" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 SQL basics | Data Manipulation with SQL" />
+  <meta name="twitter:title" content="Chapter 1 SQL Basics | SQL cookbook" />
   
   <meta name="twitter:description" content="This book introduces essential SQL commands for data maninpulation, as well as presenting equivalent dplyr code for complex queries." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Qiushi Yan" />
 
 
-<meta name="date" content="2020-07-30" />
+<meta name="date" content="2020-11-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,8 @@
   
   
 <link rel="prev" href="index.html"/>
-<link rel="next" href="write-simple-queries.html"/>
+<link rel="next" href="filtering.html"/>
+<script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,22 +51,22 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -85,7 +86,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -118,7 +119,7 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<link rel="stylesheet" href="css\style.css" type="text/css" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
 
 <body>
@@ -135,51 +136,102 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="sql-basics.html"><a href="sql-basics.html"><i class="fa fa-check"></i><b>1</b> SQL basics</a><ul>
-<li class="chapter" data-level="1.1" data-path="sql-basics.html"><a href="sql-basics.html#ddl"><i class="fa fa-check"></i><b>1.1</b> DDL</a><ul>
-<li class="chapter" data-level="1.1.1" data-path="sql-basics.html"><a href="sql-basics.html#creating-tables"><i class="fa fa-check"></i><b>1.1.1</b> Creating tables</a></li>
-<li class="chapter" data-level="1.1.2" data-path="sql-basics.html"><a href="sql-basics.html#deleting-tables"><i class="fa fa-check"></i><b>1.1.2</b> Deleting tables</a></li>
+<li class="chapter" data-level="1" data-path="sql-basics.html"><a href="sql-basics.html"><i class="fa fa-check"></i><b>1</b> SQL Basics</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="sql-basics.html"><a href="sql-basics.html#data-types"><i class="fa fa-check"></i><b>1.1</b> Data Types</a></li>
+<li class="chapter" data-level="1.2" data-path="sql-basics.html"><a href="sql-basics.html#ddl"><i class="fa fa-check"></i><b>1.2</b> DDL</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="sql-basics.html"><a href="sql-basics.html#creating-tables"><i class="fa fa-check"></i><b>1.2.1</b> Creating Tables</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path="sql-basics.html"><a href="sql-basics.html#dml"><i class="fa fa-check"></i><b>1.2</b> DML</a><ul>
-<li class="chapter" data-level="1.2.1" data-path="sql-basics.html"><a href="sql-basics.html#inserting-rows"><i class="fa fa-check"></i><b>1.2.1</b> Inserting rows</a></li>
+<li class="chapter" data-level="1.3" data-path="sql-basics.html"><a href="sql-basics.html#dropping-and-updating-tables"><i class="fa fa-check"></i><b>1.3</b> Dropping and Updating Tables</a></li>
+<li class="chapter" data-level="1.4" data-path="sql-basics.html"><a href="sql-basics.html#dml"><i class="fa fa-check"></i><b>1.4</b> DML</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="sql-basics.html"><a href="sql-basics.html#inserting-rows"><i class="fa fa-check"></i><b>1.4.1</b> Inserting Rows</a></li>
 </ul></li>
-<li class="chapter" data-level="1.3" data-path="sql-basics.html"><a href="sql-basics.html#creating-views"><i class="fa fa-check"></i><b>1.3</b> Creating views</a><ul>
-<li class="chapter" data-level="1.3.1" data-path="sql-basics.html"><a href="sql-basics.html#deleting-views"><i class="fa fa-check"></i><b>1.3.1</b> Deleting views</a></li>
-<li class="chapter" data-level="1.3.2" data-path="sql-basics.html"><a href="sql-basics.html#updating-views"><i class="fa fa-check"></i><b>1.3.2</b> Updating views</a></li>
+<li class="chapter" data-level="1.5" data-path="sql-basics.html"><a href="sql-basics.html#creating-views"><i class="fa fa-check"></i><b>1.5</b> Creating Views</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="sql-basics.html"><a href="sql-basics.html#deleting-views"><i class="fa fa-check"></i><b>1.5.1</b> Deleting Views</a></li>
+<li class="chapter" data-level="1.5.2" data-path="sql-basics.html"><a href="sql-basics.html#updating-views"><i class="fa fa-check"></i><b>1.5.2</b> Updating Views</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="sql-basics.html"><a href="sql-basics.html#queries"><i class="fa fa-check"></i><b>1.6</b> Queries</a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path="sql-basics.html"><a href="sql-basics.html#order-of-execution"><i class="fa fa-check"></i><b>1.6.1</b> Order of Execution</a></li>
+<li class="chapter" data-level="1.6.2" data-path="sql-basics.html"><a href="sql-basics.html#the-with-clause"><i class="fa fa-check"></i><b>1.6.2</b> The <code>WITH</code> Clause</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="write-simple-queries.html"><a href="write-simple-queries.html"><i class="fa fa-check"></i><b>2</b> Write simple queries</a><ul>
-<li class="chapter" data-level="2.1" data-path="write-simple-queries.html"><a href="write-simple-queries.html#the-with-clause"><i class="fa fa-check"></i><b>2.1</b> The <code>WITH</code> clause</a></li>
+<li class="chapter" data-level="2" data-path="filtering.html"><a href="filtering.html"><i class="fa fa-check"></i><b>2</b> Filtering</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="filtering.html"><a href="filtering.html#operators"><i class="fa fa-check"></i><b>2.1</b> Operators</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="filtering.html"><a href="filtering.html#comparison-operators"><i class="fa fa-check"></i><b>2.1.1</b> Comparison Operators</a></li>
+<li class="chapter" data-level="2.1.2" data-path="filtering.html"><a href="filtering.html#logical-operators"><i class="fa fa-check"></i><b>2.1.2</b> Logical Operators</a></li>
+<li class="chapter" data-level="2.1.3" data-path="filtering.html"><a href="filtering.html#other-relational-operators"><i class="fa fa-check"></i><b>2.1.3</b> Other Relational Operators</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="filtering.html"><a href="filtering.html"><i class="fa fa-check"></i><b>3</b> Filtering</a><ul>
-<li class="chapter" data-level="3.1" data-path="filtering.html"><a href="filtering.html#the-where-clause"><i class="fa fa-check"></i><b>3.1</b> The <code>WHERE</code> clause</a></li>
-<li class="chapter" data-level="3.2" data-path="filtering.html"><a href="filtering.html#operators"><i class="fa fa-check"></i><b>3.2</b> Operators</a><ul>
-<li class="chapter" data-level="3.2.1" data-path="filtering.html"><a href="filtering.html#comparison-operators"><i class="fa fa-check"></i><b>3.2.1</b> Comparison operators</a></li>
-<li class="chapter" data-level="3.2.2" data-path="filtering.html"><a href="filtering.html#logical-operators"><i class="fa fa-check"></i><b>3.2.2</b> Logical operators</a></li>
-<li class="chapter" data-level="3.2.3" data-path="filtering.html"><a href="filtering.html#other-relational-operators"><i class="fa fa-check"></i><b>3.2.3</b> Other relational operators</a></li>
+<li class="chapter" data-level="2.2" data-path="filtering.html"><a href="filtering.html#missing-values"><i class="fa fa-check"></i><b>2.2</b> Missing Values</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="filtering.html"><a href="filtering.html#conditional-functions"><i class="fa fa-check"></i><b>2.2.1</b> Conditional Functions</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="filtering.html"><a href="filtering.html#missing-values"><i class="fa fa-check"></i><b>3.3</b> Missing values</a><ul>
-<li class="chapter" data-level="3.3.1" data-path="filtering.html"><a href="filtering.html#conditional-functions"><i class="fa fa-check"></i><b>3.3.1</b> Conditional functions</a></li>
+<li class="chapter" data-level="2.3" data-path="filtering.html"><a href="filtering.html#the-having-clause"><i class="fa fa-check"></i><b>2.3</b> The <code>HAVING</code> Clause</a></li>
+<li class="chapter" data-level="2.4" data-path="filtering.html"><a href="filtering.html#filtering-by-aggregation"><i class="fa fa-check"></i><b>2.4</b> Filtering by aggregation</a></li>
 </ul></li>
-<li class="chapter" data-level="3.4" data-path="filtering.html"><a href="filtering.html#the-having-clause"><i class="fa fa-check"></i><b>3.4</b> The <code>HAVING</code> clause</a></li>
+<li class="chapter" data-level="3" data-path="aggregating.html"><a href="aggregating.html"><i class="fa fa-check"></i><b>3</b> Aggregating</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="aggregating.html"><a href="aggregating.html#aggregate-functions"><i class="fa fa-check"></i><b>3.1</b> Aggregate Functions</a></li>
+<li class="chapter" data-level="3.2" data-path="aggregating.html"><a href="aggregating.html#rowwise-aggregation"><i class="fa fa-check"></i><b>3.2</b> Rowwise Aggregation</a></li>
+<li class="chapter" data-level="3.3" data-path="aggregating.html"><a href="aggregating.html#the-group-by-clause"><i class="fa fa-check"></i><b>3.3</b> The <code>GROUP BY</code> Clause</a></li>
+<li class="chapter" data-level="3.4" data-path="aggregating.html"><a href="aggregating.html#common-aggregating-functions"><i class="fa fa-check"></i><b>3.4</b> Common Aggregating Functions</a></li>
+<li class="chapter" data-level="3.5" data-path="aggregating.html"><a href="aggregating.html#null-in-aggregation"><i class="fa fa-check"></i><b>3.5</b> <code>NULL</code> in Aggregation</a></li>
+<li class="chapter" data-level="3.6" data-path="aggregating.html"><a href="aggregating.html#find-distinct-combinations"><i class="fa fa-check"></i><b>3.6</b> Find distinct combinations</a></li>
+<li class="chapter" data-level="3.7" data-path="aggregating.html"><a href="aggregating.html#percentages"><i class="fa fa-check"></i><b>3.7</b> Percentages</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="aggregating.html"><a href="aggregating.html"><i class="fa fa-check"></i><b>4</b> Aggregating</a><ul>
-<li class="chapter" data-level="4.0.1" data-path="aggregating.html"><a href="aggregating.html#rowwise-aggregating"><i class="fa fa-check"></i><b>4.0.1</b> rowwise aggregating</a></li>
-<li class="chapter" data-level="4.1" data-path="aggregating.html"><a href="aggregating.html#the-group-by-clause."><i class="fa fa-check"></i><b>4.1</b> The <code>GROUP BY</code> clause.</a></li>
-<li class="chapter" data-level="4.2" data-path="aggregating.html"><a href="aggregating.html#common-aggregating-functions"><i class="fa fa-check"></i><b>4.2</b> Common aggregating functions</a></li>
-<li class="chapter" data-level="4.3" data-path="aggregating.html"><a href="aggregating.html#null-values-in-aggregation"><i class="fa fa-check"></i><b>4.3</b> NULL values in aggregation</a></li>
-<li class="chapter" data-level="4.4" data-path="aggregating.html"><a href="aggregating.html#using-group-by-in-non-aggregating-scenarios"><i class="fa fa-check"></i><b>4.4</b> Using <code>GROUP BY</code> in non-aggregating scenarios</a></li>
+<li class="chapter" data-level="4" data-path="window-functions.html"><a href="window-functions.html"><i class="fa fa-check"></i><b>4</b> Window Functions</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="window-functions.html"><a href="window-functions.html#create-rankings"><i class="fa fa-check"></i><b>4.1</b> Create Rankings</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="window-functions.html"><a href="window-functions.html"><i class="fa fa-check"></i><b>5</b> Window functions</a><ul>
-<li class="chapter" data-level="5.1" data-path="window-functions.html"><a href="window-functions.html#statisticcs-with-window-functions"><i class="fa fa-check"></i><b>5.1</b> Statisticcs with window functions</a></li>
+<li class="chapter" data-level="5" data-path="joining.html"><a href="joining.html"><i class="fa fa-check"></i><b>5</b> Joining</a></li>
+<li class="chapter" data-level="6" data-path="complex-data-types.html"><a href="complex-data-types.html"><i class="fa fa-check"></i><b>6</b> Complex Data Types</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="complex-data-types.html"><a href="complex-data-types.html#converting-data-types"><i class="fa fa-check"></i><b>6.1</b> Converting Data Types</a></li>
+<li class="chapter" data-level="6.2" data-path="complex-data-types.html"><a href="complex-data-types.html#date-and-time"><i class="fa fa-check"></i><b>6.2</b> Date and Time</a></li>
+<li class="chapter" data-level="6.3" data-path="complex-data-types.html"><a href="complex-data-types.html#array"><i class="fa fa-check"></i><b>6.3</b> Array</a></li>
+<li class="chapter" data-level="6.4" data-path="complex-data-types.html"><a href="complex-data-types.html#json"><i class="fa fa-check"></i><b>6.4</b> JSON</a></li>
+<li class="chapter" data-level="6.5" data-path="complex-data-types.html"><a href="complex-data-types.html#text"><i class="fa fa-check"></i><b>6.5</b> Text</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="joining.html"><a href="joining.html"><i class="fa fa-check"></i><b>6</b> Joining</a></li>
-<li class="chapter" data-level="7" data-path="data-types.html"><a href="data-types.html"><i class="fa fa-check"></i><b>7</b> Data types</a><ul>
-<li class="chapter" data-level="7.1" data-path="data-types.html"><a href="data-types.html#converting-data-types"><i class="fa fa-check"></i><b>7.1</b> Converting data types</a></li>
-<li class="chapter" data-level="7.2" data-path="data-types.html"><a href="data-types.html#date-and-time"><i class="fa fa-check"></i><b>7.2</b> Date and time</a></li>
+<li class="chapter" data-level="7" data-path="miscellaneous-query-techniques.html"><a href="miscellaneous-query-techniques.html"><i class="fa fa-check"></i><b>7</b> Miscellaneous query techniques</a></li>
+<li class="chapter" data-level="8" data-path="subqueries.html"><a href="subqueries.html"><i class="fa fa-check"></i><b>8</b> Subqueries</a>
+<ul>
+<li class="chapter" data-level="8.0.1" data-path="subqueries.html"><a href="subqueries.html#create-derived-tables"><i class="fa fa-check"></i><b>8.0.1</b> Create derived tables</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="solutions-to-sql-puzzles.html"><a href="solutions-to-sql-puzzles.html"><i class="fa fa-check"></i><b>8</b> Solutions to SQL puzzles</a></li>
+<li class="chapter" data-level="9" data-path="solutions-to-sql-puzzles.html"><a href="solutions-to-sql-puzzles.html"><i class="fa fa-check"></i><b>9</b> Solutions to SQL puzzles</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="traditional-relational-database-management-systems.html"><a href="traditional-relational-database-management-systems.html"><i class="fa fa-check"></i><b>A</b> Traditional Relational Database Management Systems</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="traditional-relational-database-management-systems.html"><a href="traditional-relational-database-management-systems.html#normalization-and-denormaliztion"><i class="fa fa-check"></i><b>A.1</b> Normalization and Denormaliztion</a></li>
+<li class="chapter" data-level="A.2" data-path="traditional-relational-database-management-systems.html"><a href="traditional-relational-database-management-systems.html#dattabase-transactions"><i class="fa fa-check"></i><b>A.2</b> Dattabase transactions</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html"><i class="fa fa-check"></i><b>B</b> Big Data, Databases and SQL</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#strength-and-limitaions-of-rdbms"><i class="fa fa-check"></i><b>B.1</b> Strength and Limitaions of RDBMS</a>
+<ul>
+<li class="chapter" data-level="B.1.1" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#strength-of-rdbms"><i class="fa fa-check"></i><b>B.1.1</b> Strength of RDBMS</a></li>
+<li class="chapter" data-level="B.1.2" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#limitations-of-rdbms-in-the-age-of-big-data"><i class="fa fa-check"></i><b>B.1.2</b> Limitations of RDBMS in the Age of Big Data</a></li>
+</ul></li>
+<li class="chapter" data-level="B.2" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#big-databases-big-data-stores-and-sql"><i class="fa fa-check"></i><b>B.2</b> Big Databases, Big Data Stores, and SQL</a>
+<ul>
+<li class="chapter" data-level="B.2.1" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#big-data-analytic-databases-data-warehouses"><i class="fa fa-check"></i><b>B.2.1</b> Big Data Analytic Databases (Data Warehouses)</a></li>
+<li class="chapter" data-level="B.2.2" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#nosql-databases"><i class="fa fa-check"></i><b>B.2.2</b> NoSQL Databases</a></li>
+<li class="chapter" data-level="B.2.3" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#non-transactional-databases"><i class="fa fa-check"></i><b>B.2.3</b> Non-transactional databases</a></li>
+<li class="chapter" data-level="B.2.4" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#big-data-acid-compliant-rdbmss"><i class="fa fa-check"></i><b>B.2.4</b> Big Data ACID-Compliant RDBMSs</a></li>
+<li class="chapter" data-level="B.2.5" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#search-engines"><i class="fa fa-check"></i><b>B.2.5</b> Search engines</a></li>
+</ul></li>
+<li class="chapter" data-level="B.3" data-path="big-data-databases-and-sql.html"><a href="big-data-databases-and-sql.html#sql-for-big-data-analysis"><i class="fa fa-check"></i><b>B.3</b> SQL for Big Data Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="using-apache-hive-and-impala.html"><a href="using-apache-hive-and-impala.html"><i class="fa fa-check"></i><b>C</b> Using Apache Hive and Impala</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="using-apache-hive-and-impala.html"><a href="using-apache-hive-and-impala.html#apache-hive"><i class="fa fa-check"></i><b>C.1</b> Apache Hive</a></li>
+<li class="chapter" data-level="C.2" data-path="using-apache-hive-and-impala.html"><a href="using-apache-hive-and-impala.html#apache-impala"><i class="fa fa-check"></i><b>C.2</b> Apache Impala</a></li>
+</ul></li>
 <li class="divider"></li>
 <li>
   <a href="https://github.com/rstudio/bookdown" target="blank">Written with bookdown</a>
@@ -194,7 +246,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Manipulation with SQL</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">SQL cookbook</a>
           </h1>
         </div>
 
@@ -202,25 +254,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="sql-basics" class="section level1">
-<h1><span class="header-section-number">Chapter 1</span> SQL basics</h1>
-<div id="ddl" class="section level2">
-<h2><span class="header-section-number">1.1</span> DDL</h2>
+<div id="sql-basics" class="section level1" number="1">
+<h1><span class="header-section-number">Chapter 1</span> SQL Basics</h1>
+<div id="data-types" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Data Types</h2>
+</div>
+<div id="ddl" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> DDL</h2>
 <ul>
 <li><p><code>CREATE</code>: to create objects (table or database) in RDBMS</p></li>
 <li><p><code>ALTER</code>: alters the structure of database</p></li>
 <li><p><code>DROP</code>: delete objects from database</p></li>
 <li><p><code>RENAME</code>: rename an objects</p></li>
 </ul>
-<div id="creating-tables" class="section level3">
-<h3><span class="header-section-number">1.1.1</span> Creating tables</h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="sql-basics.html#cb2-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> {table_name} (</span>
-<span id="cb2-2"><a href="sql-basics.html#cb2-2"></a>{column_name_1} {data_type_1} {column_constraint_1},</span>
-<span id="cb2-3"><a href="sql-basics.html#cb2-3"></a>{column_name_2} {data_type_2} {column_constraint_2},</span>
-<span id="cb2-4"><a href="sql-basics.html#cb2-4"></a>{column_name_3} {data_type_3} {column_constraint_3},</span>
-<span id="cb2-5"><a href="sql-basics.html#cb2-5"></a>…</span>
-<span id="cb2-6"><a href="sql-basics.html#cb2-6"></a>{column_name_last} {data_type_last} {column_constraint_last},</span>
-<span id="cb2-7"><a href="sql-basics.html#cb2-7"></a>)</span></code></pre></div>
+<div id="creating-tables" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Creating Tables</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="sql-basics.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> {table_name} (</span>
+<span id="cb2-2"><a href="sql-basics.html#cb2-2" aria-hidden="true" tabindex="-1"></a>{column_name_1} {data_type_1} {column_constraint_1},</span>
+<span id="cb2-3"><a href="sql-basics.html#cb2-3" aria-hidden="true" tabindex="-1"></a>{column_name_2} {data_type_2} {column_constraint_2},</span>
+<span id="cb2-4"><a href="sql-basics.html#cb2-4" aria-hidden="true" tabindex="-1"></a>{column_name_3} {data_type_3} {column_constraint_3},</span>
+<span id="cb2-5"><a href="sql-basics.html#cb2-5" aria-hidden="true" tabindex="-1"></a>…</span>
+<span id="cb2-6"><a href="sql-basics.html#cb2-6" aria-hidden="true" tabindex="-1"></a>{column_name_last} {data_type_last} {column_constraint_last},</span>
+<span id="cb2-7"><a href="sql-basics.html#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>Common data types are:</p>
 <p>The available constraints in SQL are:</p>
 <p><code>NOT NULL</code>: This constraint tells that we cannot store a null value in a column. That is, if a column is specified as NOT NULL then we will not be able to store null in this particular column any more.</p>
@@ -230,31 +285,55 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><code>CHECK</code>: This constraint helps to validate the values of a column to meet a particular condition. That is, it helps to ensure that the value stored in a column meets a specific condition.</p>
 <p><code>DEFAULT</code>: This constraint specifies a default value for the column when no value is specified by the user.</p>
 </div>
-<div id="deleting-tables" class="section level3">
-<h3><span class="header-section-number">1.1.2</span> Deleting tables</h3>
 </div>
+<div id="dropping-and-updating-tables" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Dropping and Updating Tables</h2>
+<p><code>DROP TABLE &lt;name&gt;</code> is used to delete a table. What is often done is updating an old table. This requires dropping the old table if it exists, and create a new one.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="sql-basics.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">DROP</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">EXISTS</span> <span class="op">&lt;</span>name<span class="op">&gt;</span>;</span>
+<span id="cb3-2"><a href="sql-basics.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="op">&lt;</span>name<span class="op">&gt;</span> <span class="kw">as</span> <span class="op">..</span>.</span></code></pre></div>
+<p>Note the semicolon behind <code>name</code>.</p>
 </div>
-<div id="dml" class="section level2">
-<h2><span class="header-section-number">1.2</span> DML</h2>
+<div id="dml" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> DML</h2>
 <ul>
 <li><p><code>INSERT</code>: insert data into a table</p></li>
 <li><p><code>UPDATE</code>: update existing data within a table</p></li>
 <li><p><code>DELETE</code>: deletes all records from a table, space</p></li>
 </ul>
 <p>Some would argue that <code>SELECT</code> should fall into the DML category. However, I think it is to our best advantage to make <code>SELECT</code> a standalone type of statements, DQL (database query language). Later chapters of this document is really focused on syntax and functions that can make the most of DQL.</p>
-<div id="inserting-rows" class="section level3">
-<h3><span class="header-section-number">1.2.1</span> Inserting rows</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="sql-basics.html#cb3-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> table_name(column1, column2 , column3,<span class="op">..</span>) </span>
-<span id="cb3-2"><a href="sql-basics.html#cb3-2"></a><span class="kw">VALUES</span>(value1, value2, value3<span class="op">..</span>);</span></code></pre></div>
+<div id="inserting-rows" class="section level3" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Inserting Rows</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="sql-basics.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> table_name(column1, column2 , column3,<span class="op">..</span>) </span>
+<span id="cb4-2"><a href="sql-basics.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">VALUES</span></span>
+<span id="cb4-3"><a href="sql-basics.html#cb4-3" aria-hidden="true" tabindex="-1"></a>  (value1, value2, value3, <span class="op">..</span>.),</span>
+<span id="cb4-4"><a href="sql-basics.html#cb4-4" aria-hidden="true" tabindex="-1"></a>  (value1, value2, value3, <span class="op">..</span>.),</span>
+<span id="cb4-5"><a href="sql-basics.html#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">..</span>.;</span></code></pre></div>
 </div>
 </div>
-<div id="creating-views" class="section level2">
-<h2><span class="header-section-number">1.3</span> Creating views</h2>
-<div id="deleting-views" class="section level3">
-<h3><span class="header-section-number">1.3.1</span> Deleting views</h3>
+<div id="creating-views" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Creating Views</h2>
+<div id="deleting-views" class="section level3" number="1.5.1">
+<h3><span class="header-section-number">1.5.1</span> Deleting Views</h3>
 </div>
-<div id="updating-views" class="section level3">
-<h3><span class="header-section-number">1.3.2</span> Updating views</h3>
+<div id="updating-views" class="section level3" number="1.5.2">
+<h3><span class="header-section-number">1.5.2</span> Updating Views</h3>
+</div>
+</div>
+<div id="queries" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> Queries</h2>
+<p>Queries or DQL in SQL starts with <code>SELECT</code></p>
+<div id="order-of-execution" class="section level3" number="1.6.1">
+<h3><span class="header-section-number">1.6.1</span> Order of Execution</h3>
+<p><a href="https://blog.jooq.org/2016/03/17/10-easy-steps-to-a-complete-understanding-of-sql/" class="uri">https://blog.jooq.org/2016/03/17/10-easy-steps-to-a-complete-understanding-of-sql/</a></p>
+</div>
+<div id="the-with-clause" class="section level3" number="1.6.2">
+<h3><span class="header-section-number">1.6.2</span> The <code>WITH</code> Clause</h3>
+<p><a href="https://www.geeksforgeeks.org/sql-with-clause/" class="uri">https://www.geeksforgeeks.org/sql-with-clause/</a></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="sql-basics.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> inventory_subset <span class="kw">AS</span> (</span>
+<span id="cb5-2"><a href="sql-basics.html#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> inventory <span class="kw">WHERE</span> shop <span class="op">!=</span> <span class="st">&#39;Dicey&#39;</span></span>
+<span id="cb5-3"><a href="sql-basics.html#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-4"><a href="sql-basics.html#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> inventory_subset</span></code></pre></div>
+<p>Fundamentally, the definition of a view is saved in the database and can be reused by any query, whereas a <code>WITH</code> clause (or Common Table Expression, or CTE) is tied to one specific query and can only be reused by copying. Otherwise, they will be substantially the same</p>
 
 </div>
 </div>
@@ -265,7 +344,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="write-simple-queries.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="filtering.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
